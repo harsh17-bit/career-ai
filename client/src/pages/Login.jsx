@@ -1,0 +1,162 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FiStar } from 'react-icons/fi';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import useAuthStore from '../store/authStore';
+import { authAPI } from '../services/api';
+import toast from 'react-hot-toast';
+import { useTheme } from '../context/ThemeContext';
+
+export default function Login() {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuthStore();
+  const { isDark } = useTheme();
+  const navigate = useNavigate();
+
+  const validate = () => {
+    const errs = {};
+    if (!form.email) errs.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = 'Invalid email';
+    if (!form.password) errs.password = 'Password is required';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setLoading(true);
+    try {
+      const res = await authAPI.login(form);
+      login(res.data);
+      toast.success('Welcome back!');
+      navigate(res.data.assessmentCompleted ? '/dashboard' : '/assessment');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="auth-page auth-page-login relative min-h-screen overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
+      <div
+        className={`absolute inset-0 ${
+          isDark
+            ? 'bg-[radial-gradient(circle_at_top_left,rgba(96,165,250,0.2),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(34,211,238,0.14),transparent_32%),linear-gradient(180deg,#07101d_0%,#0d1b2c_100%)]'
+            : 'bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.16),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_32%),linear-gradient(180deg,#f8fbff_0%,#eef4fb_100%)]'
+        }`}
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 mx-auto w-full max-w-xl"
+      >
+        <div
+          className={`rounded-[28px] border p-6 sm:p-8 ${
+            isDark
+              ? 'border-white/10 bg-slate-950/75 shadow-[0_24px_80px_rgba(2,6,23,0.62)]'
+              : 'border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]'
+          }`}
+        >
+          <div className="mb-6 flex items-center justify-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#4f6ef7_0%,#3858e8_100%)]">
+              <FiStar className="h-5 w-5 text-[#f4f8ff]" />
+            </div>
+            <span
+              className={`text-2xl font-bold tracking-tight ${
+                isDark ? 'text-white' : 'text-slate-900'
+              }`}
+            >
+              Career
+              <span className={isDark ? 'text-cyan-300' : 'text-blue-600'}>
+                AI
+              </span>
+            </span>
+          </div>
+
+          <h1
+            className={`text-3xl font-extrabold tracking-tight ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}
+          >
+            Sign in to continue
+          </h1>
+          <p
+            className={`mt-3 text-sm leading-6 ${
+              isDark ? 'text-slate-300' : 'text-slate-500'
+            }`}
+          >
+            Access your dashboard, assessment results, and roadmap.
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+            <Input
+              label="Email Address"
+              type="email"
+              tone={isDark ? 'dark' : 'light'}
+              autoComplete="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              error={errors.email}
+            />
+            <Input
+              label="Password"
+              type="password"
+              tone={isDark ? 'dark' : 'light'}
+              autoComplete="current-password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              error={errors.password}
+            />
+
+            <div className="flex items-center justify-end text-sm">
+              <button
+                type="button"
+                className={`font-medium ${
+                  isDark ? 'text-cyan-300' : 'text-blue-600'
+                }`}
+                onClick={() => navigate('/forgot-password')}
+              >
+                Forgot password?
+              </button>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full !rounded-2xl"
+              loading={loading}
+            >
+              Sign In
+            </Button>
+          </form>
+
+          <p
+            className={`mt-8 text-center text-sm ${
+              isDark ? 'text-slate-300' : 'text-slate-500'
+            }`}
+          >
+            Don&apos;t have an account?{' '}
+            <Link
+              to="/signup"
+              className={`font-semibold ${
+                isDark
+                  ? 'text-cyan-300 hover:text-cyan-200'
+                  : 'text-blue-600 hover:text-blue-700'
+              }`}
+            >
+              Create Account
+            </Link>
+          </p>
+        </div>
+      </motion.div>
+    </div>
+  );
+}

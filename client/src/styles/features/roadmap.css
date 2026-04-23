@@ -1,0 +1,16 @@
+/* Roadmap feature styles
+   Edit this file for roadmap timeline UI. */
+
+.roadmap-page {
+  --roadmap-mesh-opacity: 0.2;
+}
+
+.roadmap-page .roadmap-bg {
+  opacity: var(--roadmap-mesh-opacity);
+}
+
+.roadmap-page .glass-card {
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}

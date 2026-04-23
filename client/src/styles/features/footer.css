@@ -1,0 +1,26 @@
+/* Footer feature styles
+   Edit this file to customize footer spacing, contrast, and link behavior. */
+
+.footer-root {
+  --footer-border: var(--border-faint);
+  --footer-muted: var(--text-muted);
+}
+
+.footer-root {
+  border-top-color: var(--footer-border) !important;
+}
+
+.footer-root a {
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.footer-root a:hover {
+  transform: translateY(-1px);
+}
+
+.footer-root .text-white\/40,
+.footer-root .text-white\/30 {
+  color: var(--footer-muted) !important;
+}

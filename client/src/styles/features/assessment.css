@@ -1,0 +1,15 @@
+/* Assessment feature styles
+   Edit this file for multi-step assessment page UI. */
+
+.assessment-page {
+  --assessment-mesh-opacity: 0.5;
+}
+
+.assessment-page .assessment-bg {
+  opacity: var(--assessment-mesh-opacity);
+}
+
+.assessment-page .input-apple,
+.assessment-page textarea {
+  font-size: 0.95rem;
+}

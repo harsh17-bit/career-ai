@@ -1,0 +1,26 @@
+/* Auth feature styles (login/signup)
+   Edit this file for auth pages only. */
+
+.auth-page {
+  --auth-card-max: 32rem;
+}
+
+.auth-page .auth-card {
+  max-width: var(--auth-card-max);
+}
+
+.auth-page-login {
+  background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+}
+
+.auth-page-login .auth-card {
+  max-width: 72rem;
+}
+
+.auth-page .auth-title {
+  letter-spacing: -0.03em;
+}
+
+.auth-page .auth-subtitle {
+  color: var(--text-muted);
+}

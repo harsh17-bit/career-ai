@@ -1,0 +1,14 @@
+/* Dashboard feature styles
+   Edit this file to customize dashboard visuals independently. */
+
+.dashboard-page {
+  --dashboard-mesh-opacity: 0.3;
+}
+
+.dashboard-page .dashboard-bg {
+  opacity: var(--dashboard-mesh-opacity);
+}
+
+.dashboard-page .card-apple {
+  backdrop-filter: blur(48px);
+}

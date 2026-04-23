@@ -1,0 +1,23 @@
+/* Navbar feature styles
+   Edit this file to customize header/nav behavior and look. */
+
+.navbar-root {
+  --navbar-border: var(--border-faint);
+  --navbar-overlay: rgba(0, 0, 0, 0.9);
+}
+
+html.theme-light .navbar-root {
+  --navbar-overlay: rgba(243, 246, 251, 0.9);
+}
+
+.navbar-root {
+  border-color: var(--navbar-border);
+}
+
+.navbar-root .gradient-bg {
+  box-shadow: 0 10px 26px rgba(25, 120, 165, 0.28);
+}
+
+.navbar-root [data-navbar-mobile-overlay='true'] {
+  background: var(--navbar-overlay);
+}
