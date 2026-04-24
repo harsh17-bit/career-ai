@@ -3,6 +3,24 @@ import { careerRecommendationTemplate } from '../prompts/templates.js';
 import { careerSchema } from '../parsers/schemas.js';
 import { invokeGeminiWithFallback } from '../utils/geminiClient.js';
 
+const buildProfileSignature = (profileData) => {
+  const raw = [
+    profileData.educationLevel,
+    profileData.stream,
+    profileData.marks,
+    ...(profileData.subjects || []),
+    ...(profileData.interests || []),
+    ...(profileData.skills || []),
+    profileData.goals,
+  ].join('|');
+
+  let hash = 0;
+  for (let index = 0; index < raw.length; index += 1) {
+    hash = (hash * 31 + raw.charCodeAt(index)) | 0;
+  }
+  return `P-${Math.abs(hash)}`;
+};
+
 const getCareerRecommendations = async (profileData) => {
   const prompt = PromptTemplate.fromTemplate(careerRecommendationTemplate);
 
@@ -14,11 +32,12 @@ const getCareerRecommendations = async (profileData) => {
     interests: profileData.interests.join(', '),
     skills: profileData.skills.join(', '),
     goals: profileData.goals,
+    profileSignature: buildProfileSignature(profileData),
   });
 
   const response = await invokeGeminiWithFallback({
     prompt: formattedPrompt,
-    temperature: 0.7,
+    temperature: 0.9,
   });
   const content = response.content;
 

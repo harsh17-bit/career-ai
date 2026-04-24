@@ -16,7 +16,21 @@ export const generateRoadmap = async (req, res) => {
       return res.status(400).json({ message: 'Career field is required' });
     }
 
-    const roadmapData = await generateRoadmapAI(career, level || 'beginner');
+    const profileContext = [
+      `Education: ${req.user?.profile?.educationLevel || 'N/A'}`,
+      `Stream: ${req.user?.profile?.stream || 'N/A'}`,
+      `Marks: ${typeof req.user?.profile?.marks === 'number' ? req.user.profile.marks : 'N/A'}`,
+      `Subjects: ${(req.user?.profile?.subjects || []).join(', ') || 'N/A'}`,
+      `Interests: ${(req.user?.profile?.interests || []).join(', ') || 'N/A'}`,
+      `Skills: ${(req.user?.profile?.skills || []).join(', ') || 'N/A'}`,
+      `Goals: ${req.user?.profile?.goals || 'N/A'}`,
+    ].join('\n');
+
+    const roadmapData = await generateRoadmapAI(
+      career,
+      level || 'beginner',
+      profileContext
+    );
 
     // Delete existing roadmap for this user/career combo
     await Roadmap.deleteMany({ user: req.user._id, career });

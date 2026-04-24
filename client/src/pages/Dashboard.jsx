@@ -11,6 +11,7 @@ import {
   FiChevronRight,
   FiCheckCircle,
   FiTool,
+  FiRotateCcw,
 } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -86,6 +87,20 @@ export default function Dashboard() {
   const matchedSkills =
     topCareer?.requiredSkills?.filter((s) => userSkills.includes(s)) || [];
 
+  const profile = user?.profile || {};
+  const completionChecks = [
+    !!profile.educationLevel,
+    !!profile.stream,
+    Array.isArray(profile.subjects) && profile.subjects.length >= 2,
+    Array.isArray(profile.interests) && profile.interests.length >= 2,
+    Array.isArray(profile.skills) && profile.skills.length >= 2,
+    typeof profile.goals === 'string' && profile.goals.trim().length >= 10,
+    typeof profile.marks === 'number' && profile.marks >= 0,
+  ];
+  const profileCompletion = Math.round(
+    (completionChecks.filter(Boolean).length / completionChecks.length) * 100
+  );
+
   const stats = [
     {
       icon: FiHeadphones,
@@ -99,8 +114,8 @@ export default function Dashboard() {
     },
     {
       icon: FiTrendingUp,
-      label: 'Profile Score',
-      value: `${user?.profile?.marks || 0}%`,
+      label: 'Profile Completion',
+      value: `${profileCompletion}%`,
     },
     {
       icon: FiChevronRight,
@@ -122,6 +137,14 @@ export default function Dashboard() {
             </h1>
             <p>Here are your AI-powered career recommendations.</p>
           </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => navigate('/assessment')}
+          >
+            <FiRotateCcw className="w-4 h-4" />
+            Retake Assessment
+          </Button>
         </div>
 
         {/* Stats Grid */}

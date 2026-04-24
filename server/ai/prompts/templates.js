@@ -10,6 +10,7 @@ Student Profile:
 - Interests: {interests}
 - Current Skills: {skills}
 - Career Goals: {goals}
+- Profile Signature: {profileSignature}
 
 IMPORTANT: Return your response as a valid JSON object matching this exact structure:
 {{
@@ -32,11 +33,17 @@ Rules:
 - Provide exactly 5 careers, sorted by matchPercentage descending
 - difficulty must be one of: "Easy", "Moderate", "Challenging", "Expert"
 - salaryRange should reflect global averages
-- nextStep should be immediately actionable`;
+- nextStep should be immediately actionable
+- Every recommendation must explicitly reflect at least two profile factors (subjects, interests, skills, goals)
+- Keep all 5 recommendations from different role clusters, avoid near-duplicates
+- Do not return generic defaults unless strongly justified by the profile`;
 
 export const roadmapTemplate = `You are a senior career development strategist and learning path designer.
 
 Create a comprehensive, structured learning roadmap for someone who wants to become a {career} starting from {level} level.
+Use this learner profile context to personalize sequencing and resources:
+- Profile Context: {profileContext}
+- Profile Signature: {profileSignature}
 
 IMPORTANT: Return your response as a valid JSON object matching this exact structure:
 {{
@@ -66,7 +73,9 @@ Rules:
 - Resource types: "course", "book", "video", "doc"
 - Use real, existing resource URLs (Coursera, Udemy, YouTube, docs)
 - Difficulty progression: Beginner → Intermediate → Advanced → Advanced → Expert
-- Be specific with topic names, not generic`;
+- Be specific with topic names, not generic
+- Align topic depth and project complexity to the provided profile context
+- Ensure at least one resource in each phase maps to current learner skill level`;
 
 export const chatMentorTemplate = `You are CareerAI Mentor, a friendly, encouraging, and knowledgeable AI career advisor. You help students make informed career decisions, provide study tips, interview preparation, and emotional support.
 

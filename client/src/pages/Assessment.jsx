@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -55,20 +55,92 @@ const steps = [
   },
 ];
 
+const calculateAcademicScore = (form) => {
+  const educationScore = form.educationLevel ? 12 : 0;
+  const streamScore = form.stream ? 8 : 0;
+  const subjectsScore = Math.min(form.subjects.length, 6) * 4;
+  const interestsScore = Math.min(form.interests.length, 6) * 2;
+  const skillsScore = Math.min(form.skills.length, 8) * 4;
+  const goalsLength = (form.goals || '').trim().length;
+  const goalsScore = Math.min(goalsLength, 200) * 0.18;
+
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      Math.round(
+        educationScore +
+          streamScore +
+          subjectsScore +
+          interestsScore +
+          skillsScore +
+          goalsScore
+      )
+    )
+  );
+};
+
 export default function Assessment() {
+  const ASSESSMENT_DRAFT_KEY = 'career-ai-assessment-draft';
+
+  const { user, updateUser } = useAuthStore();
+
+  const buildInitialForm = () => ({
+    educationLevel: user?.profile?.educationLevel || '',
+    stream: user?.profile?.stream || '',
+    marks: typeof user?.profile?.marks === 'number' ? user.profile.marks : 0,
+    subjects: Array.isArray(user?.profile?.subjects)
+      ? user.profile.subjects
+      : [],
+    interests: Array.isArray(user?.profile?.interests)
+      ? user.profile.interests
+      : [],
+    skills: Array.isArray(user?.profile?.skills) ? user.profile.skills : [],
+    goals: user?.profile?.goals || '',
+  });
+
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    educationLevel: '',
-    stream: '',
-    marks: 75,
-    subjects: [],
-    interests: [],
-    skills: [],
-    goals: '',
-  });
+  const [form, setForm] = useState(buildInitialForm);
   const navigate = useNavigate();
-  const { updateUser } = useAuthStore();
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(ASSESSMENT_DRAFT_KEY);
+      if (!raw) return;
+
+      const parsed = JSON.parse(raw);
+      if (parsed?.form && typeof parsed.form === 'object') {
+        setForm((prev) => ({ ...prev, ...parsed.form }));
+      }
+      if (typeof parsed?.step === 'number') {
+        setStep(Math.max(0, Math.min(4, parsed.step)));
+      }
+    } catch {
+      // Ignore malformed draft data.
+    }
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      ASSESSMENT_DRAFT_KEY,
+      JSON.stringify({ form, step })
+    );
+  }, [form, step]);
+
+  useEffect(() => {
+    const nextScore = calculateAcademicScore(form);
+    if (nextScore !== form.marks) {
+      setForm((prev) => ({ ...prev, marks: nextScore }));
+    }
+  }, [
+    form.educationLevel,
+    form.stream,
+    form.subjects,
+    form.interests,
+    form.skills,
+    form.goals,
+  ]);
 
   const toggleArray = (field, value) => {
     setForm((prev) => ({
@@ -90,7 +162,12 @@ export default function Assessment() {
       case 3:
         return form.skills.length >= 2;
       case 4:
-        return form.goals.length >= 10 && form.marks > 0;
+        return (
+          form.goals.length >= 10 &&
+          Number.isFinite(Number(form.marks)) &&
+          Number(form.marks) > 0 &&
+          Number(form.marks) <= 100
+        );
       default:
         return false;
     }
@@ -105,6 +182,7 @@ export default function Assessment() {
         careerRecommendations: res.data.careers,
         profile: form,
       });
+      window.localStorage.removeItem(ASSESSMENT_DRAFT_KEY);
       toast.success('Career recommendations ready!');
       navigate('/dashboard');
     } catch (err) {
@@ -294,23 +372,21 @@ export default function Assessment() {
                         Academic Score (%)
                       </label>
                       <div className="flex items-center gap-4">
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={form.marks}
-                          onChange={(e) =>
-                            setForm({
-                              ...form,
-                              marks: parseInt(e.target.value),
-                            })
-                          }
-                          className="flex-1 accent-apple-blue"
-                        />
+                        <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+                          <motion.div
+                            className="h-full gradient-bg"
+                            animate={{ width: `${form.marks}%` }}
+                            transition={{ duration: 0.35 }}
+                          />
+                        </div>
                         <span className="text-2xl font-bold text-white w-16 text-right">
                           {form.marks}%
                         </span>
                       </div>
+                      <p className="text-xs text-white/35 mt-2">
+                        Auto-calculated from your selected education, stream,
+                        subjects, interests, skills, and career goals.
+                      </p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-white/50 mb-2">
