@@ -18,6 +18,8 @@
   --surface-soft-hover: rgba(255, 255, 255, 0.1);
   --surface-card: rgba(255, 255, 255, 0.03);
   --surface-card-hover: rgba(255, 255, 255, 0.06);
+
+  --header-height: 90px;
 }
 
 html.theme-light {

@@ -27,15 +27,16 @@ const getFromAddress = () =>
   `CareerAI <${process.env.EMAIL_USER || process.env.SMTP_USER || 'no-reply@careerai.local'}>`;
 
 const theme = {
-  bg: '#060b16',
-  panel: '#0b1220',
-  panelSoft: 'rgba(255, 255, 255, 0.03)',
-  border: 'rgba(148, 163, 184, 0.16)',
-  text: '#f8fbff',
-  muted: 'rgba(229, 238, 251, 0.72)',
+  bg: '#f8fafc',
+  panel: '#ffffff',
+  panelSoft: '#fbfdff',
+  border: 'rgba(15, 23, 42, 0.08)',
+  text: '#0f172a',
+  muted: 'rgba(15, 23, 42, 0.70)',
   accent: '#4f6ef7',
   accent2: '#22d3ee',
   accent3: '#a855f7',
+  note: 'rgba(15, 23, 42, 0.46)',
 };
 
 const escapeHtml = (value = '') =>
@@ -46,61 +47,203 @@ const escapeHtml = (value = '') =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
-const shell = ({ label, title, intro, content, note }) => `
-  <div style="margin:0;padding:32px 16px;background:radial-gradient(circle at top left, rgba(79,110,247,0.24), transparent 28%), radial-gradient(circle at bottom right, rgba(34,211,238,0.20), transparent 26%), linear-gradient(180deg, ${theme.bg} 0%, #03060d 100%);font-family:Inter,Arial,sans-serif;color:${theme.text};">
-    <div style="max-width:680px;margin:0 auto;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin:0 6px 18px;gap:12px;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:44px;height:44px;border-radius:16px;background:linear-gradient(135deg, ${theme.accent} 0%, ${theme.accent2} 55%, ${theme.accent3} 100%);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;box-shadow:0 16px 36px rgba(79,110,247,0.35);">A</div>
-          <div>
-            <div style="font-size:18px;font-weight:800;letter-spacing:-0.03em;line-height:1;color:#ffffff;">Career<span style="color:${theme.accent2};">AI</span></div>
-            <div style="margin-top:4px;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:${theme.muted};">${escapeHtml(label)}</div>
-          </div>
+const shell = ({ label, title, intro, content, note }) => `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CareerAI Email</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: Inter, Arial, sans-serif;
+      color: ${theme.text};
+      padding: 32px 16px;
+      background: ${theme.bg};
+    }
+    .wrap { max-width: 680px; margin: 0 auto; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 6px 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #eaf2ff;
+      border: 1px solid rgba(79, 110, 247, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      color: ${theme.accent};
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+    }
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: ${theme.text};
+    }
+    .brand-name span { color: ${theme.accent2}; }
+    .subtle {
+      margin-top: 4px;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(15, 23, 42, 0.58);
+    }
+    .meta {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(15, 23, 42, 0.58);
+    }
+    .card {
+      overflow: hidden;
+      border: 1px solid ${theme.border};
+      border-radius: 30px;
+      background: ${theme.panel};
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+    }
+    .accent { height: 6px; background: linear-gradient(90deg, rgba(79, 110, 247, 0.95) 0%, rgba(34, 211, 238, 0.75) 55%, rgba(168, 85, 247, 0.85) 100%); }
+    .body { padding: 34px 30px 30px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(79, 110, 247, 0.06);
+      border: 1px solid rgba(79, 110, 247, 0.12);
+      color: #3151c6;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: ${theme.accent2};
+      display: inline-block;
+    }
+    h1 {
+      margin: 18px 0 12px;
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      color: ${theme.text};
+    }
+    .intro {
+      margin: 0 0 24px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: ${theme.muted};
+    }
+    .content {
+      border-radius: 24px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      background: ${theme.panelSoft};
+      padding: 24px;
+    }
+    .footer {
+      padding: 18px 8px 0;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.7;
+      color: rgba(15, 23, 42, 0.42);
+    }
+    .note {
+      margin: 18px 2px 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: ${theme.note};
+    }
+    /* Mobile: 480px and below */
+    @media (max-width: 480px) {
+      body { padding: 16px 10px; }
+      .body { padding: 20px 14px 16px; }
+      .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .meta { display: none; }
+      h1 { font-size: 24px; margin: 14px 0 10px; }
+      .intro { font-size: 14px; margin: 0 0 18px; }
+      .logo { width: 40px; height: 40px; font-size: 16px; }
+      .brand-name { font-size: 16px; }
+      .content { padding: 18px; border-radius: 16px; }
+    }
+    /* Tablet: 480px to 768px */
+    @media (max-width: 768px) {
+      body { padding: 24px 12px; }
+      .body { padding: 26px 22px 20px; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .meta { text-align: left; }
+      h1 { font-size: 28px; }
+      .intro { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">A</div>
+        <div>
+          <div class="brand-name">Career<span>AI</span></div>
+          <div class="subtle">${escapeHtml(label)}</div>
         </div>
-        <div style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:${theme.muted};">Career guidance</div>
       </div>
+      <div class="meta">Career guidance</div>
+    </div>
 
-      <div style="overflow:hidden;border:1px solid ${theme.border};border-radius:30px;background:${theme.panel};box-shadow:0 28px 80px rgba(0,0,0,0.45);">
-        <div style="height:7px;background:linear-gradient(90deg, ${theme.accent} 0%, ${theme.accent2} 45%, ${theme.accent3} 100%);"></div>
-        <div style="padding:34px 30px 30px;">
-          <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(79,110,247,0.14);border:1px solid rgba(79,110,247,0.20);color:#dbe7ff;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;">
-            <span style="width:8px;height:8px;border-radius:999px;background:${theme.accent2};display:inline-block;"></span>
-            ${escapeHtml(label)}
-          </div>
+    <div class="card">
+      <div class="accent"></div>
+      <div class="body">
+        <div class="pill"><span class="dot"></span>${escapeHtml(label)}</div>
+        <h1>${escapeHtml(title)}</h1>
+        <p class="intro">${intro}</p>
 
-          <h1 style="margin:18px 0 12px;font-size:34px;line-height:1.1;letter-spacing:-0.05em;color:#ffffff;">${escapeHtml(title)}</h1>
-          <p style="margin:0 0 24px;font-size:16px;line-height:1.8;color:${theme.muted};">${intro}</p>
-
-          <div style="border-radius:24px;border:1px solid rgba(255,255,255,0.08);background:${theme.panelSoft};padding:24px;">
-            ${content}
-          </div>
-
-          ${note ? `<p style="margin:18px 2px 0;font-size:12px;line-height:1.7;color:rgba(229,238,251,0.52);">${note}</p>` : ''}
+        <div class="content">
+          ${content}
         </div>
-      </div>
 
-      <div style="padding:18px 8px 0;text-align:center;font-size:12px;line-height:1.7;color:rgba(229,238,251,0.44);">
-        Built to help you move faster with less guesswork.
+        ${note ? `<p class="note">${note}</p>` : ''}
       </div>
     </div>
-  </div>`;
+
+    <div class="footer">Built to help you move faster with less guesswork.</div>
+  </div>
+</body>
+</html>`;
 
 const codeBadge = (code) => `
   <div style="margin:18px 0 14px;text-align:center;">
-    <div style="display:inline-block;padding:16px 22px;border-radius:22px;background:rgba(15,23,42,0.96);border:1px solid rgba(148,163,184,0.24);box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
-      <div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(229,238,251,0.50);margin-bottom:10px;">Security code</div>
-      <div style="font-size:36px;line-height:1;font-weight:900;letter-spacing:10px;color:#ffffff;">${escapeHtml(code)}</div>
+    <div style="display:inline-block;padding:16px 22px;border-radius:22px;background:#ffffff;border:1px solid rgba(15,23,42,0.10);box-shadow:0 8px 22px rgba(15,23,42,0.05);">
+      <div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(15,23,42,0.48);margin-bottom:10px;">Security code</div>
+      <div style="font-size:36px;line-height:1;font-weight:900;letter-spacing:10px;color:${theme.text};">${escapeHtml(code)}</div>
     </div>
   </div>`;
 
 const chip = (text, style = 'blue') => {
   const styles = {
-    blue: 'background:rgba(79,110,247,0.12);border-color:rgba(79,110,247,0.22);color:#dbe7ff;',
-    cyan: 'background:rgba(34,211,238,0.10);border-color:rgba(34,211,238,0.18);color:#d8fbff;',
-    white: 'background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.08);color:#f8fbff;',
+    blue: 'background:rgba(79,110,247,0.08);border-color:rgba(79,110,247,0.18);color:#1d4ed8;',
+    cyan: 'background:rgba(34,211,238,0.08);border-color:rgba(34,211,238,0.18);color:#0e7490;',
+    white: 'background:#ffffff;border-color:rgba(15,23,42,0.08);color:#0f172a;',
   };
 
-  return `<div style="padding:14px 16px;border-radius:18px;border:1px solid ${style === 'blue' ? 'rgba(79,110,247,0.22)' : style === 'cyan' ? 'rgba(34,211,238,0.18)' : 'rgba(255,255,255,0.08)'};${styles[style]}font-size:14px;line-height:1.7;">${text}</div>`;
+  return `<div style="padding:14px 16px;border-radius:18px;border:1px solid ${style === 'blue' ? 'rgba(79,110,247,0.18)' : style === 'cyan' ? 'rgba(34,211,238,0.18)' : 'rgba(15,23,42,0.08)'};${styles[style]}font-size:14px;line-height:1.7;">${text}</div>`;
 };
 
 export const sendEmail = async ({ to, subject, text, html }) => {
@@ -133,9 +276,8 @@ export const sendVerificationEmail = async ({ to, name, otp }) => {
         name
       )},</p>
       ${codeBadge(otp)}
-      <p style="margin:0;font-size:14px;line-height:1.8;color:${theme.muted};">This code expires in <strong style="color:#ffffff;">10 minutes</strong>. If you did not request it, you can safely ignore this message.</p>`,
-    note:
-      'For your security, never share this code with anyone. CareerAI will never ask for it in chat or over social media.',
+      <p style="margin:0;font-size:14px;line-height:1.8;color:${theme.muted};">This code expires in <strong style="color:${theme.text};">10 minutes</strong>. If you did not request it, you can safely ignore this message.</p>`,
+    note: 'For your security, never share this code with anyone. CareerAI will never ask for it in chat or over social media.',
   });
 
   return sendEmail({ to, subject, text, html });
@@ -177,9 +319,8 @@ export const sendPasswordResetOtpEmail = async ({ to, name, otp }) => {
         name
       )},</p>
       ${codeBadge(otp)}
-      <p style="margin:0;font-size:14px;line-height:1.8;color:${theme.muted};">This reset code expires in <strong style="color:#ffffff;">10 minutes</strong>. If you did not request a password reset, you can ignore this email.</p>`,
-    note:
-      'If you are worried about your account, complete the reset immediately and choose a strong new password.',
+      <p style="margin:0;font-size:14px;line-height:1.8;color:${theme.muted};">This reset code expires in <strong style="color:${theme.text};">10 minutes</strong>. If you did not request a password reset, you can ignore this email.</p>`,
+    note: 'If you are worried about your account, complete the reset immediately and choose a strong new password.',
   });
 
   return sendEmail({ to, subject, text, html });
@@ -202,11 +343,10 @@ export const sendAssessmentCompletedEmail = async ({
         name
       )},</p>
       <div style="margin-top:18px;display:grid;gap:12px;">
-        ${chip(`Top match: <strong style="color:#ffffff;">${escapeHtml(careerName || 'Your recommendation')}</strong>`, 'blue')}
+        ${chip(`Top match: <strong style="color:${theme.text};">${escapeHtml(careerName || 'Your recommendation')}</strong>`, 'blue')}
         ${chip('Open your dashboard to export a PDF summary, review skill gaps, and continue your roadmap.', 'white')}
       </div>`,
-    note:
-      'Your career recommendations are personalized based on the assessment you completed today.',
+    note: 'Your career recommendations are personalized based on the assessment you completed today.',
   });
 
   return sendEmail({ to, subject, text, html });
@@ -233,12 +373,11 @@ export const sendRoadmapMilestoneEmail = async ({
       <div style="margin-top:18px;border-radius:22px;padding:18px 20px;background:linear-gradient(135deg, rgba(79,110,247,0.18), rgba(34,211,238,0.12));border:1px solid rgba(148,163,184,0.18);">
         <div style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(229,238,251,0.54);margin-bottom:10px;">Completed milestone</div>
         <div style="font-size:22px;font-weight:800;line-height:1.3;color:#ffffff;">${escapeHtml(milestone)}</div>
-        <div style="margin-top:8px;font-size:14px;line-height:1.8;color:${theme.muted};">Career: <strong style="color:#fff;">${escapeHtml(career)}</strong></div>
-        <div style="margin-top:10px;font-size:14px;line-height:1.8;color:${theme.muted};">Current progress: <strong style="color:#fff;">${escapeHtml(String(progress))}%</strong></div>
+        <div style="margin-top:8px;font-size:14px;line-height:1.8;color:${theme.muted};">Career: <strong style="color:${theme.text};">${escapeHtml(career)}</strong></div>
+        <div style="margin-top:10px;font-size:14px;line-height:1.8;color:${theme.muted};">Current progress: <strong style="color:${theme.text};">${escapeHtml(String(progress))}%</strong></div>
       </div>
       <div style="margin-top:16px;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:${theme.text};font-size:14px;line-height:1.7;">Keep the momentum going to unlock the next phase and raise your completion badge.</div>`,
-    note:
-      'Small wins add up quickly. Keep moving and your streak will turn into a stronger badge.',
+    note: 'Small wins add up quickly. Keep moving and your streak will turn into a stronger badge.',
   });
 
   return sendEmail({ to, subject, text, html });
@@ -257,11 +396,10 @@ export const sendWeeklyCheckInEmail = async ({ to, name, career }) => {
         name
       )},</p>
       <div style="margin-top:18px;display:grid;gap:12px;">
-        ${chip(career ? `Focus area: <strong style="color:#fff;">${escapeHtml(career)}</strong>` : 'Open your dashboard to review your active roadmap.', 'blue')}
+        ${chip(career ? `Focus area: <strong style="color:${theme.text};">${escapeHtml(career)}</strong>` : 'Open your dashboard to review your active roadmap.', 'blue')}
         ${chip('Complete a milestone, review your skill gap, or export your progress as PDF.', 'white')}
       </div>`,
-    note:
-      'You can adjust reminders and pace inside your roadmap as you progress.',
+    note: 'You can adjust reminders and pace inside your roadmap as you progress.',
   });
 
   return sendEmail({ to, subject, text, html });

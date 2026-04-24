@@ -165,19 +165,7 @@ export default function Signup() {
           }`}
         >
           <div className="mb-6 flex items-center justify-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#4f6ef7_0%,#3858e8_100%)]">
-              <FiStar className="h-5 w-5 text-[#f4f8ff]" />
-            </div>
-            <span
-              className={`text-2xl font-bold tracking-tight ${
-                isDark ? 'text-white' : 'text-slate-900'
-              }`}
-            >
-              Career
-              <span className={isDark ? 'text-cyan-300' : 'text-blue-600'}>
-                AI
-              </span>
-            </span>
+            <span className="site-header-name">Career.AI</span>
           </div>
 
           <h1
@@ -246,7 +234,6 @@ export default function Signup() {
               loading={loading}
             >
               Create Account
-              <FiArrowRight className="h-5 w-5" />
             </Button>
           </form>
 

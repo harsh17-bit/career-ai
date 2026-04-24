@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
@@ -11,25 +11,42 @@ import { addNotification } from '../utils/notifications';
 export default function ForgotPassword() {
   const { isDark } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const emailFromLogin = location.state?.email || '';
+  const otpAlreadySent = Boolean(location.state?.otpAlreadySent);
+  const otpSentRef = useRef(false);
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(emailFromLogin ? 2 : 1);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    email: '',
+    email: emailFromLogin,
     otp: '',
     newPassword: '',
   });
 
-  const handleSendOtp = async (e) => {
-    e.preventDefault();
-    if (!form.email) {
-      toast.error('Email is required');
+  useEffect(() => {
+    if (
+      emailFromLogin &&
+      step === 2 &&
+      !otpSentRef.current &&
+      !otpAlreadySent
+    ) {
+      otpSentRef.current = true;
+      handleSendOtp(null, emailFromLogin);
+    }
+  }, [emailFromLogin, otpAlreadySent, step]);
+
+  const handleSendOtp = async (e, emailToUse) => {
+    if (e) e.preventDefault();
+    const emailValue = emailToUse || form.email;
+    if (!emailValue || emailValue.trim() === '') {
+      toast.error('Please enter your email address first');
       return;
     }
 
     setLoading(true);
     try {
-      const res = await authAPI.forgotPassword({ email: form.email });
+      const res = await authAPI.forgotPassword({ email: emailValue });
       addNotification({
         type: 'otp',
         title: 'Reset code sent',
@@ -93,7 +110,7 @@ export default function ForgotPassword() {
               : 'border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]'
           }`}
         >
-          <p
+          {/* <p
             className={`text-sm font-semibold uppercase tracking-[0.22em] ${
               isDark ? 'text-cyan-300/85' : 'text-blue-600/80'
             }`}
@@ -115,69 +132,132 @@ export default function ForgotPassword() {
             {step === 1
               ? 'Enter your email and we will send an OTP.'
               : 'Enter OTP and your new password to finish reset.'}
-          </p>
+          </p> */}
 
-          {step === 1 ? (
-            <form onSubmit={handleSendOtp} className="mt-7 space-y-4">
-              <Input
-                label="Email"
-                type="email"
-                tone={isDark ? 'dark' : 'light'}
-                autoComplete="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
+          {/* {step === 1 ? ( */}
+          {/* // <form onSubmit={handleSendOtp} className="mt-7 space-y-4">
+            //   <Input
+            //     label="Email"
+            //     type="email"
+            //     tone={isDark ? 'dark' : 'light'}
+            //     autoComplete="email"
+            //     value={form.email}
+            //     onChange={(e) => setForm({ ...form, email: e.target.value })}
+            //   />
+            //   <Button
+            //     type="submit"
+            //     className="w-full !rounded-2xl"
+            //     loading={loading}
+            //     disabled={!form.email || form.email.trim() === ''}
+            //   >
+            //     Send OTP
+            //   </Button>
+            // </form> */}
+
+          <form onSubmit={handleResetPassword} className="mt-7 space-y-4">
+            <div>
+              <label
+                className={`block text-sm font-medium mb-3 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}
+              >
+                Verification Code
+              </label>
+              <p
+                className={`text-xs mb-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
+              >
+                Enter the 6-digit code sent to your device.
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                {[0, 1, 2].map((i) => (
+                  <input
+                    key={i}
+                    type="text"
+                    maxLength="1"
+                    inputMode="numeric"
+                    value={form.otp[i] || ''}
+                    onChange={(e) => {
+                      const newOtp = form.otp.split('');
+                      newOtp[i] = e.target.value.replace(/\D/g, '');
+                      setForm({ ...form, otp: newOtp.join('').slice(0, 6) });
+                      if (e.target.value && i < 2) {
+                        document.getElementById(`otp-${i + 1}`)?.focus();
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace' && !form.otp[i] && i > 0) {
+                        document.getElementById(`otp-${i - 1}`)?.focus();
+                      }
+                    }}
+                    id={`otp-${i}`}
+                    className={`w-12 h-12 text-center text-lg font-semibold rounded-lg border-2 transition-colors ${
+                      isDark
+                        ? 'bg-slate-900 border-slate-700 text-white focus:border-cyan-400 focus:outline-none'
+                        : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:outline-none'
+                    }`}
+                  />
+                ))}
+                <span
+                  className={`text-2xl font-light ${isDark ? 'text-slate-500' : 'text-slate-400'}`}
+                >
+                  ·
+                </span>
+                {[3, 4, 5].map((i) => (
+                  <input
+                    key={i}
+                    type="text"
+                    maxLength="1"
+                    inputMode="numeric"
+                    value={form.otp[i] || ''}
+                    onChange={(e) => {
+                      const newOtp = form.otp.split('');
+                      newOtp[i] = e.target.value.replace(/\D/g, '');
+                      setForm({ ...form, otp: newOtp.join('').slice(0, 6) });
+                      if (e.target.value && i < 5) {
+                        document.getElementById(`otp-${i + 1}`)?.focus();
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace' && !form.otp[i] && i > 3) {
+                        document.getElementById(`otp-${i - 1}`)?.focus();
+                      }
+                    }}
+                    id={`otp-${i}`}
+                    className={`w-12 h-12 text-center text-lg font-semibold rounded-lg border-2 transition-colors ${
+                      isDark
+                        ? 'bg-slate-900 border-slate-700 text-white focus:border-cyan-400 focus:outline-none'
+                        : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:outline-none'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+            <Input
+              label="New Password"
+              type="password"
+              tone={isDark ? 'dark' : 'light'}
+              autoComplete="new-password"
+              value={form.newPassword}
+              onChange={(e) =>
+                setForm({ ...form, newPassword: e.target.value })
+              }
+            />
+            <div className="flex gap-3">
+              {/* <Button
+                type="button"
+                variant="ghost"
+                className="w-full !rounded-2xl"
+                onClick={() => setStep(1)}
+              >
+                Back
+              </Button> */}
               <Button
                 type="submit"
                 className="w-full !rounded-2xl"
                 loading={loading}
               >
-                Send OTP
+                Update Password
               </Button>
-            </form>
-          ) : (
-            <form onSubmit={handleResetPassword} className="mt-7 space-y-4">
-              <Input
-                label="OTP"
-                type="text"
-                tone={isDark ? 'dark' : 'light'}
-                value={form.otp}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    otp: e.target.value.replace(/\D/g, '').slice(0, 6),
-                  })
-                }
-              />
-              <Input
-                label="New Password"
-                type="password"
-                tone={isDark ? 'dark' : 'light'}
-                autoComplete="new-password"
-                value={form.newPassword}
-                onChange={(e) =>
-                  setForm({ ...form, newPassword: e.target.value })
-                }
-              />
-              <div className="flex gap-3">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="w-full !rounded-2xl"
-                  onClick={() => setStep(1)}
-                >
-                  Back
-                </Button>
-                <Button
-                  type="submit"
-                  className="w-full !rounded-2xl"
-                  loading={loading}
-                >
-                  Update Password
-                </Button>
-              </div>
-            </form>
-          )}
+            </div>
+          </form>
 
           <p
             className={`mt-8 text-center text-sm ${

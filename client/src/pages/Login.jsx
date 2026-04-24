@@ -13,6 +13,7 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
   const { login } = useAuthStore();
   const { isDark } = useTheme();
   const navigate = useNavigate();
@@ -43,6 +44,34 @@ export default function Login() {
     }
   };
 
+  const handleForgotPasswordClick = async () => {
+    const email = form.email.trim();
+    if (!email) {
+      toast.error('Please enter your email address first');
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    setForgotLoading(true);
+    try {
+      await authAPI.forgotPassword({ email });
+      navigate('/forgot-password', {
+        state: { email, otpAlreadySent: true },
+      });
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message ||
+          'No account found with this email address.'
+      );
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
   return (
     <div className="auth-page auth-page-login relative min-h-screen overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
       <div
@@ -67,19 +96,7 @@ export default function Login() {
           }`}
         >
           <div className="mb-6 flex items-center justify-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#4f6ef7_0%,#3858e8_100%)]">
-              <FiStar className="h-5 w-5 text-[#f4f8ff]" />
-            </div>
-            <span
-              className={`text-2xl font-bold tracking-tight ${
-                isDark ? 'text-white' : 'text-slate-900'
-              }`}
-            >
-              Career
-              <span className={isDark ? 'text-cyan-300' : 'text-blue-600'}>
-                AI
-              </span>
-            </span>
+            <span className="site-header-name">Career.AI</span>
           </div>
 
           <h1
@@ -121,9 +138,18 @@ export default function Login() {
               <button
                 type="button"
                 className={`font-medium ${
-                  isDark ? 'text-cyan-300' : 'text-blue-600'
+                  form.email && form.email.trim() !== ''
+                    ? isDark
+                      ? 'text-cyan-300 cursor-pointer'
+                      : 'text-blue-600 cursor-pointer'
+                    : isDark
+                      ? 'text-slate-500 cursor-not-allowed'
+                      : 'text-slate-400 cursor-not-allowed'
                 }`}
-                onClick={() => navigate('/forgot-password')}
+                onClick={handleForgotPasswordClick}
+                disabled={
+                  !form.email || form.email.trim() === '' || forgotLoading
+                }
               >
                 Forgot password?
               </button>

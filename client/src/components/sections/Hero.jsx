@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 import {
   FiArrowRight,
   FiPlay,
-  FiStar,
   FiHeadphones,
   FiTarget,
   FiArrowUp,
 } from 'react-icons/fi';
 import Button from '../ui/Button';
+import '../../styles/features/hero.css';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section className="hero-section">
       {/* Animated gradient mesh background */}
-      <div className="absolute inset-0">
+      <div className="hero-bg-layer">
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -54,12 +54,12 @@ export default function Hero() {
       </div>
 
       {/* Dot pattern */}
-      <div className="absolute inset-0 dot-pattern opacity-30" />
+      <div className="hero-dot-pattern" />
 
-      <div className="container-apple relative z-10 px-6">
-        <div className="max-w-5xl mx-auto text-center">
+      <div className="container-apple hero-container">
+        <div className="hero-inner">
           {/* Badge */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -69,14 +69,14 @@ export default function Hero() {
             <span className="text-sm font-medium text-white/70">
               AI-Powered Career Guidance
             </span>
-          </motion.div>
+          </motion.div> */}
 
           {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-hero font-bold tracking-tight text-white mb-8"
+            className="hero-title"
           >
             Find Your Perfect
             <br />
@@ -88,7 +88,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="hero-subtext"
           >
             Powered by advanced AI, CareerAI analyzes your skills, interests,
             and goals to recommend personalized career paths with detailed
@@ -100,7 +100,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20"
+            className="hero-ctas"
           >
             <Link to="/signup">
               <Button variant="primary" size="lg">
@@ -121,11 +121,11 @@ export default function Hero() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="relative max-w-4xl mx-auto"
+            className="hero-preview"
           >
             {/* Main preview card */}
-            <div className="glass-card rounded-3xl p-8 md:p-12 border border-white/[0.08]">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="glass-card hero-preview-card">
+              <div className="hero-feature-grid">
                 {[
                   {
                     icon: FiHeadphones,
@@ -151,24 +151,20 @@ export default function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 + i * 0.15 }}
-                    className="flex flex-col items-center text-center p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] transition-all duration-500"
+                    className="hero-feature-item"
                   >
-                    <div
-                      className={`w-14 h-14 rounded-2xl ${item.color} flex items-center justify-center mb-4`}
-                    >
+                    <div className={`hero-feature-icon ${item.color}`}>
                       <item.icon className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white mb-1 tracking-tight">
-                      {item.label}
-                    </h3>
-                    <p className="text-sm text-white/40">{item.desc}</p>
+                    <h3 className="hero-feature-title">{item.label}</h3>
+                    <p className="hero-feature-desc">{item.desc}</p>
                   </motion.div>
                 ))}
               </div>
             </div>
 
             {/* Decorative gradient */}
-            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-2/3 h-40 gradient-mesh-strong rounded-full" />
+            <div className="hero-preview-glow gradient-mesh-strong" />
           </motion.div>
         </div>
       </div>

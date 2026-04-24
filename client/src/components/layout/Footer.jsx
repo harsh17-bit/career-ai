@@ -17,19 +17,14 @@ const footerLinks = {
   Company: [
     { label: 'About', href: '#' },
     { label: 'Blog', href: '#' },
-    { label: 'Careers', href: '#' },
-    { label: 'Contact', href: '#' },
   ],
   Resources: [
     { label: 'Documentation', href: '#' },
-    { label: 'Community', href: '#' },
     { label: 'Support', href: '#' },
-    { label: 'API', href: '#' },
   ],
   Legal: [
     { label: 'Privacy', href: '#' },
     { label: 'Terms', href: '#' },
-    { label: 'Cookies', href: '#' },
   ],
 };
 
@@ -37,7 +32,7 @@ const socials = [
   { icon: FiGithub, href: '#', label: 'GitHub' },
   { icon: FiTwitter, href: '#', label: 'Twitter' },
   { icon: FiLinkedin, href: '#', label: 'LinkedIn' },
-  { icon: FiMail, href: '#', label: 'Email' },
+  { icon: FiMail, href: 'mailto:hr9012454@gmail.com', label: 'Email' },
 ];
 
 export default function Footer() {
@@ -48,12 +43,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-5">
-              <div className="w-8 h-8 rounded-xl gradient-bg flex items-center justify-center">
-                <FiStar className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white">
-                Career<span className="gradient-text">AI</span>
-              </span>
+              <span className="site-header-name">Career.AI</span>
             </Link>
             <p className="text-white/40 text-sm leading-relaxed max-w-xs mb-6">
               AI-powered career guidance platform. Discover your perfect path
@@ -100,9 +90,9 @@ export default function Footer() {
           <p className="text-sm text-white/30">
             © {new Date().getFullYear()} CareerAI. All rights reserved.
           </p>
-          <p className="text-sm text-white/30">
+          {/* <p className="text-sm text-white/30">
             Built with <span className="text-apple-pink">♥</span> and AI
-          </p>
+          </p> */}
         </div>
       </div>
     </footer>
