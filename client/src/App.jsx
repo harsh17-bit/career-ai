@@ -20,6 +20,9 @@ import Profile from './pages/Profile';
 import EmailPreview from './pages/EmailPreview';
 import useAuthStore from './store/authStore';
 import { useTheme } from './context/ThemeContext';
+import ModernCollapsibleSidebar from './components/lightswind/modern-collapsible-sidebar';
+
+const SIDEBAR_ROUTES = ['/dashboard', '/roadmap', '/profile'];
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuthStore();
@@ -43,72 +46,85 @@ function AppShell() {
   const { isDark } = useTheme();
   const location = useLocation();
   const isEmailPreviewRoute = location.pathname === '/email-preview';
+  const isSidebarRoute = SIDEBAR_ROUTES.some((r) =>
+    location.pathname.startsWith(r)
+  );
+
+  const pageRoutes = (
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <PublicRoute>
+            <Signup />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <PublicRoute>
+            <ForgotPassword />
+          </PublicRoute>
+        }
+      />
+      <Route path="/email-preview" element={<EmailPreview />} />
+      <Route
+        path="/assessment"
+        element={
+          <ProtectedRoute>
+            <Assessment />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/roadmap"
+        element={
+          <ProtectedRoute>
+            <Roadmap />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 
   return (
     <div className="min-h-screen app-shell transition-colors duration-300">
       {!isEmailPreviewRoute && <Navbar />}
 
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <PublicRoute>
-              <Signup />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/forgot-password"
-          element={
-            <PublicRoute>
-              <ForgotPassword />
-            </PublicRoute>
-          }
-        />
-        <Route path="/email-preview" element={<EmailPreview />} />
-        <Route
-          path="/assessment"
-          element={
-            <ProtectedRoute>
-              <Assessment />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/roadmap"
-          element={
-            <ProtectedRoute>
-              <Roadmap />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      {isSidebarRoute ? (
+        <ModernCollapsibleSidebar>
+          {pageRoutes}
+        </ModernCollapsibleSidebar>
+      ) : (
+        pageRoutes
+      )}
 
       {!isEmailPreviewRoute && <Footer />}
       {!isEmailPreviewRoute && <Chatbot />}

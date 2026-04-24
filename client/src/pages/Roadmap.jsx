@@ -203,7 +203,7 @@ export default function Roadmap() {
   }
 
   return (
-    <div className="roadmap-page min-h-screen pt-24 pb-20 px-6 relative">
+    <div className="roadmap-page min-h-screen pt-8 pb-20 px-6 relative">
       <div className="roadmap-bg absolute inset-0 gradient-mesh opacity-20" />
 
       <div className="container-apple relative z-10 max-w-4xl">

@@ -40,7 +40,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="profile-page min-h-screen pt-24 pb-20 px-6 relative">
+    <div className="profile-page min-h-screen pt-8 pb-20 px-6 relative">
       <div className="profile-bg absolute inset-0 gradient-mesh opacity-20" />
 
       <div className="container-apple relative z-10 max-w-3xl">

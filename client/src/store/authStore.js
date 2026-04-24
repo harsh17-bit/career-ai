@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 const useAuthStore = create(
   persist(
@@ -29,6 +29,7 @@ const useAuthStore = create(
     }),
     {
       name: 'career-ai-auth',
+      storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({
         user: state.user,
         token: state.token,
