@@ -21,6 +21,7 @@ import EmailPreview from './pages/EmailPreview';
 import useAuthStore from './store/authStore';
 import { useTheme } from './context/ThemeContext';
 import ModernCollapsibleSidebar from './components/lightswind/modern-collapsible-sidebar';
+import FloatingDock from './components/lightswind/floating-dock';
 
 const SIDEBAR_ROUTES = ['/dashboard', '/roadmap', '/profile'];
 
@@ -128,6 +129,7 @@ function AppShell() {
 
       {!isEmailPreviewRoute && <Footer />}
       {!isEmailPreviewRoute && <Chatbot />}
+      {!isEmailPreviewRoute && <FloatingDock />}
 
       <Toaster
         position="top-right"

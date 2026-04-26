@@ -40,19 +40,19 @@ export default function Profile() {
   };
 
   return (
-    <div className="profile-page min-h-screen pt-8 pb-20 px-6 relative">
+    <div className="profile-page min-h-screen pt-6 sm:pt-8 pb-14 sm:pb-20 px-4 sm:px-6 relative">
       <div className="profile-bg absolute inset-0 gradient-mesh opacity-20" />
 
       <div className="container-apple relative z-10 max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-10"
+          className="mb-6 sm:mb-10"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-2 sm:mb-3">
             Profile
           </h1>
-          <p className="text-lg text-white/40">
+          <p className="text-sm sm:text-base md:text-lg text-white/40">
             Manage your account and career preferences.
           </p>
         </motion.div>
@@ -62,17 +62,17 @@ export default function Profile() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass-card rounded-3xl p-8 mb-6"
+          className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6"
         >
-          <div className="flex items-center gap-6 mb-8">
-            <div className="w-20 h-20 rounded-3xl gradient-bg flex items-center justify-center text-3xl font-bold text-white">
+          <div className="flex items-center gap-3 sm:gap-4 md:gap-6 mb-5 sm:mb-8">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl sm:rounded-3xl gradient-bg flex items-center justify-center text-xl sm:text-2xl md:text-3xl font-bold text-white">
               {user?.name?.charAt(0)?.toUpperCase() || 'U'}
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white tracking-tight">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight">
                 {user?.name}
               </h2>
-              <p className="text-white/40">{user?.email}</p>
+              <p className="text-xs sm:text-sm text-white/40">{user?.email}</p>
             </div>
           </div>
 
@@ -101,7 +101,7 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-4 sm:mt-6">
             <Button
               variant="primary"
               size="sm"
@@ -120,9 +120,9 @@ export default function Profile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="glass-card rounded-3xl p-8"
+            className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8"
           >
-            <h3 className="text-xl font-bold text-white mb-6 tracking-tight">
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 tracking-tight">
               Assessment Profile
             </h3>
 

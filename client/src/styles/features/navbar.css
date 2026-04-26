@@ -1,6 +1,6 @@
 .site-header {
-  /* position: fixed; */
   position: fixed;
+  /* position: relative; */
   top: 0;
   right: 0;
   left: 0;
@@ -8,9 +8,11 @@
   padding: 10px 0;
   transition: padding 180ms ease;
 }
+
 .site-header {
   height: var(--header-height);
 }
+
 .site-header.is-scrolled {
   padding: 8px 0;
 }
@@ -354,11 +356,22 @@ html.theme-light .site-header-mobile-link:hover {
   }
 
   .site-header-shell {
-    min-height: 60px;
+    min-height: 56px;
+    border-radius: 14px;
+    padding: 0 8px;
   }
 
   .site-header-name {
-    font-size: 18px;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+  }
+
+  .site-header-mark,
+  .site-header-icon-btn,
+  .site-header-mobile-toggle {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
   }
 
   .site-header-mobile-panel {

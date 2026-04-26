@@ -140,6 +140,7 @@ export default function Dashboard() {
           <Button
             variant="secondary"
             size="sm"
+            className="w-full sm:w-auto"
             onClick={() => navigate('/assessment')}
           >
             <FiRotateCcw className="w-4 h-4" />
@@ -250,6 +251,7 @@ export default function Dashboard() {
                   <Button
                     variant="primary"
                     size="sm"
+                    className="w-full sm:w-auto"
                     onClick={() =>
                       navigate(
                         `/roadmap?career=${encodeURIComponent(career.name)}`

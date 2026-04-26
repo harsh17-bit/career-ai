@@ -137,6 +137,35 @@
   }
 }
 
+@media (max-width: 640px) {
+  .btn-apple {
+    padding: 0.62rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .card-apple {
+    padding: 1rem;
+  }
+
+  .input-apple {
+    padding: 0.68rem 0.9rem;
+    border-radius: 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .section-padding {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .container-apple {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+}
+
 /* Animated gradient border */
 .gradient-border {
   position: relative;

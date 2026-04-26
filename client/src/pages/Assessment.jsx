@@ -217,7 +217,7 @@ export default function Assessment() {
   };
 
   const OptionGrid = ({ options, selected, onSelect, multi = false }) => (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
       {options.map((option) => {
         const isSelected = multi
           ? selected.includes(option)
@@ -228,7 +228,7 @@ export default function Assessment() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => onSelect(option)}
-            className={`px-4 py-3.5 rounded-2xl text-sm font-medium text-left transition-all duration-300 border ${
+            className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium text-left transition-all duration-300 border ${
               isSelected
                 ? 'bg-apple-blue/20 border-apple-blue/50 text-apple-blue'
                 : 'bg-white/[0.03] border-white/[0.08] text-white/60 hover:bg-white/[0.06] hover:border-white/[0.15]'
@@ -242,11 +242,11 @@ export default function Assessment() {
   );
 
   return (
-    <div className="assessment-page min-h-screen flex flex-col pt-20 relative">
+    <div className="assessment-page min-h-screen flex flex-col pt-16 sm:pt-20 relative">
       <div className="assessment-bg absolute inset-0 gradient-mesh opacity-50" />
 
       {/* Progress bar */}
-      <div className="fixed top-[72px] left-0 right-0 z-40 h-1 bg-white/5">
+      <div className="fixed top-[64px] sm:top-[72px] left-0 right-0 z-40 h-1 bg-white/5">
         <motion.div
           className="h-full gradient-bg"
           animate={{ width: `${((step + 1) / 5) * 100}%` }}
@@ -254,14 +254,14 @@ export default function Assessment() {
         />
       </div>
 
-      <div className="flex-1 flex items-center justify-center px-6 relative z-10">
+      <div className="flex-1 flex items-center justify-center px-3 sm:px-6 relative z-10">
         <div className="w-full max-w-2xl">
           {/* Step counter */}
           <motion.div
             key={step}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-right mb-6"
+            className="text-right mb-4 sm:mb-6"
           >
             <span className="text-sm font-mono text-white/30">
               {String(step + 1).padStart(2, '0')} / 05
@@ -279,7 +279,7 @@ export default function Assessment() {
               exit="exit"
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="glass-card rounded-3xl p-8 md:p-12 border border-white/[0.08]">
+              <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-12 border border-white/[0.08]">
                 <div className="flex items-center gap-3 mb-2">
                   {(() => {
                     const Icon = steps[step].icon;
@@ -289,10 +289,12 @@ export default function Assessment() {
                     Step {step + 1}
                   </span>
                 </div>
-                <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight">
                   {steps[step].title}
                 </h2>
-                <p className="text-white/40 mb-8">{steps[step].subtitle}</p>
+                <p className="text-sm sm:text-base text-white/40 mb-5 sm:mb-8">
+                  {steps[step].subtitle}
+                </p>
 
                 {/* Step 0: Education Level */}
                 {step === 0 && (
@@ -314,9 +316,9 @@ export default function Assessment() {
 
                 {/* Step 2: Subjects & Interests */}
                 {step === 2 && (
-                  <div className="space-y-8">
+                  <div className="space-y-6 sm:space-y-8">
                     <div>
-                      <h3 className="text-lg font-semibold text-white mb-3">
+                      <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
                         Subjects{' '}
                         <span className="text-white/30 text-sm font-normal">
                           (min 2)
@@ -330,7 +332,7 @@ export default function Assessment() {
                       />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-white mb-3">
+                      <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
                         Interests{' '}
                         <span className="text-white/30 text-sm font-normal">
                           (min 2)
@@ -349,7 +351,7 @@ export default function Assessment() {
                 {/* Step 3: Skills */}
                 {step === 3 && (
                   <div>
-                    <h3 className="text-lg font-semibold text-white mb-3">
+                    <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
                       Your Skills{' '}
                       <span className="text-white/30 text-sm font-normal">
                         (min 2)
@@ -366,7 +368,7 @@ export default function Assessment() {
 
                 {/* Step 4: Goals & Marks */}
                 {step === 4 && (
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     <div>
                       <label className="block text-sm font-medium text-white/50 mb-2">
                         Academic Score (%)
@@ -379,7 +381,7 @@ export default function Assessment() {
                             transition={{ duration: 0.35 }}
                           />
                         </div>
-                        <span className="text-2xl font-bold text-white w-16 text-right">
+                        <span className="text-xl sm:text-2xl font-bold text-white w-14 sm:w-16 text-right">
                           {form.marks}%
                         </span>
                       </div>
@@ -412,7 +414,7 @@ export default function Assessment() {
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-8">
+          <div className="flex items-center justify-between mt-5 sm:mt-8">
             <Button
               variant="ghost"
               onClick={goBack}

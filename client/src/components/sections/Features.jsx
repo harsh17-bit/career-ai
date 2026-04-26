@@ -85,17 +85,17 @@ export default function Features() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-20"
+          className="text-center mb-10 sm:mb-14 md:mb-20"
         >
           <span className="text-apple-blue text-sm font-semibold tracking-widest uppercase mb-4 block">
             Features
           </span>
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-6xl font-bold tracking-tight text-white mb-4 sm:mb-6">
             Everything you need to
             <br />
             <span className="gradient-text">launch your career</span>
           </h2>
-          <p className="text-lg text-white/40 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg text-white/40 max-w-2xl mx-auto">
             A comprehensive AI platform that guides you from career discovery to
             your first job, powered by cutting-edge technology.
           </p>
@@ -107,13 +107,13 @@ export default function Features() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 md:gap-6"
         >
           {features.map((feature) => (
             <motion.div
               key={feature.title}
               variants={itemVariants}
-              className="group card-apple hover:border-white/[0.15] relative overflow-hidden"
+              className="group card-apple hover:border-white/[0.15] relative overflow-hidden p-4 sm:p-6 md:p-8"
             >
               {/* Glow effect on hover */}
               {/* <div
@@ -121,14 +121,14 @@ export default function Features() {
               /> */}
 
               <div
-                className={`w-14 h-14 rounded-2xl ${feature.color} ${feature.shadow} flex items-center justify-center mb-6 transition-transform duration-500 group-hover:scale-110`}
+                className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl sm:rounded-2xl ${feature.color} ${feature.shadow} flex items-center justify-center mb-4 sm:mb-5 md:mb-6 transition-transform duration-500 group-hover:scale-110`}
               >
-                <feature.icon className="w-7 h-7 text-white" />
+                <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3 tracking-tight">
+              <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 tracking-tight">
                 {feature.title}
               </h3>
-              <p className="text-white/40 leading-relaxed text-sm">
+              <p className="text-white/40 leading-relaxed text-xs sm:text-sm">
                 {feature.description}
               </p>
             </motion.div>

@@ -203,7 +203,7 @@ export default function Roadmap() {
   }
 
   return (
-    <div className="roadmap-page min-h-screen pt-8 pb-20 px-6 relative">
+    <div className="roadmap-page min-h-screen pt-6 sm:pt-8 pb-14 sm:pb-20 px-4 sm:px-6 relative">
       <div className="roadmap-bg absolute inset-0 gradient-mesh opacity-20" />
 
       <div className="container-apple relative z-10 max-w-4xl">
@@ -211,7 +211,7 @@ export default function Roadmap() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <div className="flex items-center gap-2 mb-2">
             <FiStar className="w-5 h-5 text-apple-blue" />
@@ -219,10 +219,10 @@ export default function Roadmap() {
               Learning Roadmap
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-2 sm:mb-3">
             {activeRoadmap.career}
           </h1>
-          <div className="flex items-center gap-4 text-white/40">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-white/40 text-sm sm:text-base">
             <span className="flex items-center gap-1.5">
               <FiClock className="w-4 h-4" />
               {activeRoadmap.totalDuration}
@@ -230,11 +230,11 @@ export default function Roadmap() {
             <Badge variant="blue">{activeRoadmap.level}</Badge>
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-3">
-            <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">
+          <div className="mt-4 sm:mt-5 flex flex-wrap gap-2 sm:gap-3">
+            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm text-white/70">
               {completedMilestones}/{totalMilestones} milestones
             </div>
-            <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">
+            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm text-white/70">
               {streak} day streak
             </div>
             <Badge
@@ -255,7 +255,7 @@ export default function Roadmap() {
 
         {/* Roadmap selector if multiple */}
         {roadmaps.length > 1 && (
-          <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+          <div className="flex gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2">
             {roadmaps.map((rm) => (
               <button
                 key={rm._id}
@@ -263,7 +263,7 @@ export default function Roadmap() {
                   setActiveRoadmap(rm);
                   setExpandedPhase(0);
                 }}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all ${
                   activeRoadmap._id === rm._id
                     ? 'bg-apple-blue/20 text-apple-blue border border-apple-blue/30'
                     : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
@@ -280,13 +280,13 @@ export default function Roadmap() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass-card rounded-2xl p-6 mb-8"
+          className="glass-card rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-white/50">
               Overall Progress
             </span>
-            <span className="text-lg font-bold gradient-text">
+            <span className="text-base sm:text-lg font-bold gradient-text">
               {activeRoadmap.overallProgress || 0}%
             </span>
           </div>
@@ -308,7 +308,7 @@ export default function Roadmap() {
         </motion.div>
 
         {/* Phases Timeline */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {activeRoadmap.phases?.map((phase, index) => {
             const isExpanded = expandedPhase === index;
             const isLocked =
@@ -333,10 +333,10 @@ export default function Roadmap() {
                   {/* Phase header */}
                   <button
                     onClick={() => setExpandedPhase(isExpanded ? -1 : index)}
-                    className="w-full p-6 flex items-center gap-4 text-left"
+                    className="w-full p-4 sm:p-6 flex items-center gap-3 sm:gap-4 text-left"
                   >
                     <div
-                      className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center ${
                         phase.completed
                           ? 'bg-green-500/20'
                           : isLocked
@@ -345,22 +345,22 @@ export default function Roadmap() {
                       }`}
                     >
                       {phase.completed ? (
-                        <FiCheckCircle className="w-6 h-6 text-green-400" />
+                        <FiCheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />
                       ) : isLocked ? (
-                        <FiLock className="w-6 h-6 text-white/30" />
+                        <FiLock className="w-5 h-5 sm:w-6 sm:h-6 text-white/30" />
                       ) : (
-                        <span className="text-lg font-bold text-apple-blue">
+                        <span className="text-base sm:text-lg font-bold text-apple-blue">
                           {index + 1}
                         </span>
                       )}
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-white tracking-tight">
+                      <h3 className="text-base sm:text-lg font-semibold text-white tracking-tight">
                         {phase.title}
                       </h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <span className="text-sm text-white/40 flex items-center gap-1">
+                      <div className="flex items-center gap-2 sm:gap-3 mt-1">
+                        <span className="text-xs sm:text-sm text-white/40 flex items-center gap-1">
                           <FiClock className="w-3.5 h-3.5" />
                           {phase.duration}
                         </span>
@@ -391,7 +391,7 @@ export default function Roadmap() {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="px-6 pb-6 space-y-6">
+                        <div className="px-4 sm:px-6 pb-4 sm:pb-6 space-y-4 sm:space-y-6">
                           {/* Topics */}
                           <div>
                             <h4 className="text-sm font-semibold text-white/50 uppercase tracking-wider mb-3">

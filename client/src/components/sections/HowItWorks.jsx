@@ -44,17 +44,17 @@ export default function HowItWorks() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-20"
+          className="text-center mb-10 sm:mb-14 md:mb-20"
         >
           <span className="text-apple-purple text-sm font-semibold tracking-widest uppercase mb-4 block">
             How It Works
           </span>
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-6xl font-bold tracking-tight text-white mb-4 sm:mb-6">
             Three steps to your
             <br />
             <span className="gradient-text">dream career.</span>
           </h2>
-          <p className="text-lg text-white/40 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg text-white/40 max-w-2xl mx-auto">
             Our streamlined process makes career discovery effortless and
             actionable.
           </p>
@@ -76,7 +76,7 @@ export default function HowItWorks() {
                 delay: index * 0.2,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className={`relative flex flex-col md:flex-row items-center gap-8 mb-16 last:mb-0 ${
+              className={`relative flex flex-col md:flex-row items-center gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 md:mb-16 last:mb-0 ${
                 index % 2 !== 0 ? 'md:flex-row-reverse' : ''
               }`}
             >
@@ -95,11 +95,11 @@ export default function HowItWorks() {
               <div
                 className={`flex-1 ${index % 2 === 0 ? 'md:pr-20 md:text-right' : 'md:pl-20'}`}
               >
-                <div className="card-apple">
+                <div className="card-apple p-4 sm:p-6 md:p-8">
                   <div
-                    className={`inline-flex w-14 h-14 rounded-2xl bg-gradient-to-br ${step.color} items-center justify-center mb-5 md:hidden`}
+                    className={`inline-flex w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br ${step.color} items-center justify-center mb-3 sm:mb-5 md:hidden`}
                   >
-                    <step.icon className="w-7 h-7 text-white" />
+                    <step.icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
                   </div>
                   <div className="flex items-center gap-3 mb-2 md:hidden">
                     <span
@@ -108,10 +108,10 @@ export default function HowItWorks() {
                       STEP {step.number}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-semibold text-white mb-3 tracking-tight">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white mb-2 sm:mb-3 tracking-tight">
                     {step.title}
                   </h3>
-                  <p className="text-white/40 leading-relaxed">
+                  <p className="text-white/40 leading-relaxed text-sm sm:text-base">
                     {step.description}
                   </p>
                 </div>

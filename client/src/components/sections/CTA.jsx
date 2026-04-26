@@ -12,7 +12,7 @@ export default function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative rounded-[2.5rem] overflow-hidden"
+          className="relative rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden"
         >
           {/* Background */}
           <div className="absolute inset-0 gradient-bg opacity-90" />
@@ -31,13 +31,13 @@ export default function CTA() {
           />
 
           {/* Content */}
-          <div className="relative z-10 text-center py-20 md:py-28 px-8">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6">
+          <div className="relative z-10 text-center py-12 sm:py-16 md:py-28 px-4 sm:px-6 md:px-8">
+            <h2 className="text-2xl sm:text-3xl md:text-6xl font-bold tracking-tight text-white mb-4 sm:mb-6">
               Ready to find your
               <br />
               perfect career?
             </h2>
-            <p className="text-lg text-white/70 max-w-xl mx-auto mb-10">
+            <p className="text-sm sm:text-base md:text-lg text-white/70 max-w-xl mx-auto mb-6 sm:mb-8 md:mb-10">
               Join thousands of students who've already discovered their dream
               careers. Start your personalized AI assessment today — it's
               completely free.
