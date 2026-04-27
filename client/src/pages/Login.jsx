@@ -65,7 +65,7 @@ export default function Login() {
     } catch (err) {
       toast.error(
         err.response?.data?.message ||
-          'No account found with this email address.'
+        'No account found with this email address.'
       );
     } finally {
       setForgotLoading(false);
@@ -81,30 +81,28 @@ export default function Login() {
         className="relative z-10 mx-auto w-full max-w-xl"
       >
         <div
-          className={`rounded-[28px] border p-6 sm:p-8 ${
-            isDark
-              ? 'border-white/10 bg-slate-950/75 shadow-[0_24px_80px_rgba(2,6,23,0.62)]'
-              : 'border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]'
-          }`}
+          className={`rounded-[28px] border p-6 sm:p-8 ${isDark
+            ? 'border-white/10 bg-slate-950/75 shadow-[0_24px_80px_rgba(2,6,23,0.62)]'
+            : 'border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]'
+            }`}
         >
           <div className="mb-6 flex items-center justify-center gap-2">
             <span className="site-header-name">Career.AI</span>
           </div>
 
-          <h1
-            className={`text-3xl font-extrabold tracking-tight ${
-              isDark ? 'text-white' : 'text-slate-900'
-            }`}
+          {/* <h1
+            className={`text-3xl font-extrabold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'
+              }`}
           >
             Sign in to continue
-          </h1>
-          <p
+          </h1> */}
+          {/* <p
             className={`mt-3 text-sm leading-6 ${
               isDark ? 'text-slate-300' : 'text-slate-500'
             }`}
           >
             Access your dashboard, assessment results, and roadmap.
-          </p>
+          </p> */}
 
           <form onSubmit={handleSubmit} className="mt-7 space-y-4">
             <Input
@@ -129,15 +127,14 @@ export default function Login() {
             <div className="flex items-center justify-end text-sm">
               <button
                 type="button"
-                className={`font-medium ${
-                  form.email && form.email.trim() !== ''
-                    ? isDark
-                      ? 'text-cyan-300 cursor-pointer'
-                      : 'text-blue-600 cursor-pointer'
-                    : isDark
-                      ? 'text-slate-500 cursor-not-allowed'
-                      : 'text-slate-400 cursor-not-allowed'
-                }`}
+                className={`font-medium ${form.email && form.email.trim() !== ''
+                  ? isDark
+                    ? 'text-cyan-300 cursor-pointer'
+                    : 'text-blue-600 cursor-pointer'
+                  : isDark
+                    ? 'text-slate-500 cursor-not-allowed'
+                    : 'text-slate-400 cursor-not-allowed'
+                  }`}
                 onClick={handleForgotPasswordClick}
                 disabled={
                   !form.email || form.email.trim() === '' || forgotLoading
@@ -157,18 +154,16 @@ export default function Login() {
           </form>
 
           <p
-            className={`mt-8 text-center text-sm ${
-              isDark ? 'text-slate-300' : 'text-slate-500'
-            }`}
+            className={`mt-8 text-center text-sm ${isDark ? 'text-slate-300' : 'text-slate-500'
+              }`}
           >
             Don&apos;t have an account?{' '}
             <Link
               to="/signup"
-              className={`font-semibold ${
-                isDark
-                  ? 'text-cyan-300 hover:text-cyan-200'
-                  : 'text-blue-600 hover:text-blue-700'
-              }`}
+              className={`font-semibold ${isDark
+                ? 'text-cyan-300 hover:text-cyan-200'
+                : 'text-blue-600 hover:text-blue-700'
+                }`}
             >
               Create Account
             </Link>

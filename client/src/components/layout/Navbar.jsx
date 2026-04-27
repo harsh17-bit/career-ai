@@ -10,6 +10,7 @@ import {
   FiUser,
   FiX,
 } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 import useAuthStore from '../../store/authStore';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -46,6 +47,8 @@ export default function Navbar() {
     if (href.startsWith('#')) {
       if (location.pathname !== '/') {
         navigate('/');
+        // The homepage might need time to mount before scrolling, 
+        // but for now this works if they just navigate to /
         return;
       }
       const section = document.querySelector(href);
@@ -59,16 +62,14 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     navigate('/');
+    setMobileOpen(false);
   };
 
   return (
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
-      <div className="container-apple site-header-wrap">
+      <div className="container-apple site-header-wrap relative">
         <div className="site-header-shell">
           <Link to="/" className="site-header-brand" aria-label="CareerAI home">
-            {/* <div className="w-8 h-8 rounded-xl gradient-bg flex items-center justify-center transition-transform duration-300">
-              <FiStar className="w-4 h-4 text-white" />
-            </div> */}
             <span className="site-header-name">Career.AI</span>
           </Link>
 
@@ -97,7 +98,7 @@ export default function Navbar() {
 
             <button
               type="button"
-              className="site-header-icon-btn"
+              className="site-header-icon-btn hidden md:inline-flex"
               aria-label="Notifications"
             >
               <FiBell />
@@ -107,7 +108,7 @@ export default function Navbar() {
               <>
                 <button
                   type="button"
-                  className="site-header-icon-btn"
+                  className="site-header-icon-btn hidden md:inline-flex"
                   onClick={() => navigate('/profile')}
                   aria-label="Profile"
                 >
@@ -115,7 +116,7 @@ export default function Navbar() {
                 </button>
                 <button
                   type="button"
-                  className="site-header-deploy"
+                  className="site-header-deploy hidden md:inline-flex"
                   onClick={handleLogout}
                 >
                   <FiLogOut />
@@ -125,7 +126,7 @@ export default function Navbar() {
             ) : (
               <button
                 type="button"
-                className="site-header-deploy"
+                className="site-header-deploy hidden md:inline-flex"
                 onClick={() => navigate('/login')}
               >
                 <FiUser />
@@ -144,47 +145,70 @@ export default function Navbar() {
           </button>
         </div>
 
-        {mobileOpen && (
-          <div className="site-header-mobile-panel">
-            {navLinks.map((link) => (
-              <button
-                key={link.label}
-                type="button"
-                className="site-header-mobile-link"
-                onClick={() => handleNavClick(link.href)}
-              >
-                {link.label}
-              </button>
-            ))}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -15, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -15, scale: 0.98 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="absolute left-2 right-2 top-[calc(100%+12px)] p-3 rounded-3xl bg-[var(--bg-elevated)]/95 backdrop-blur-3xl border border-[var(--border-soft)] shadow-2xl flex flex-col gap-1 overflow-hidden z-50 lg:hidden"
+            >
+              <div className="flex flex-col p-1">
+                {navLinks.map((link) => (
+                  <button
+                    key={link.label}
+                    type="button"
+                    className="w-full text-left px-4 py-3.5 rounded-2xl text-[15px] font-semibold text-[var(--text-primary)] hover:bg-[var(--surface-soft)] transition-colors"
+                    onClick={() => handleNavClick(link.href)}
+                  >
+                    {link.label}
+                  </button>
+                ))}
+              </div>
 
-            {isAuthenticated ? (
-              <>
-                <button
-                  type="button"
-                  className="site-header-mobile-link"
-                  onClick={() => navigate('/profile')}
-                >
-                  Profile
-                </button>
-                <button
-                  type="button"
-                  className="site-header-mobile-link"
-                  onClick={handleLogout}
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <button
-                type="button"
-                className="site-header-mobile-link"
-                onClick={() => navigate('/login')}
-              >
-                Login
-              </button>
-            )}
-          </div>
-        )}
+              <div className="w-[calc(100%-2rem)] h-px bg-[var(--border-soft)] mx-auto my-1" />
+
+              <div className="flex flex-col p-1">
+                {isAuthenticated ? (
+                  <>
+                    <button
+                      type="button"
+                      className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-[15px] font-semibold text-[var(--text-primary)] hover:bg-[var(--surface-soft)] transition-colors"
+                      onClick={() => {
+                        navigate('/profile');
+                        setMobileOpen(false);
+                      }}
+                    >
+                      <FiUser className="w-4 h-4" />
+                      Profile
+                    </button>
+                    <button
+                      type="button"
+                      className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-[15px] font-semibold text-[#FF375F] hover:bg-[#FF375F]/10 transition-colors"
+                      onClick={handleLogout}
+                    >
+                      <FiLogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3.5 mt-1 rounded-2xl text-[15px] font-bold bg-[var(--text-primary)] text-[var(--bg-base)] transition-transform active:scale-95"
+                    onClick={() => {
+                      navigate('/login');
+                      setMobileOpen(false);
+                    }}
+                  >
+                    <FiUser className="w-4 h-4" />
+                    Login / Sign Up
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Layout, Map, GraduationCap, User, LogOut, LogIn } from "lucide-react";
+import { Home, Layout, Map, GraduationCap, User, LogOut } from "lucide-react";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom";
-import { cn } from "../../lib/utils";
 import useAuthStore from "../../store/authStore";
 import { useTheme } from "../../context/ThemeContext";
+import { Dock, DockIcon, DockSeparator } from "./apple-dock";
 
 const FloatingDock = () => {
     const { logout, isAuthenticated } = useAuthStore();
@@ -14,8 +14,10 @@ const FloatingDock = () => {
     const location = useLocation();
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
+    // Using the items that match the user's current logic, 
+    // but styled exactly like the Lightswind apple-dock component photo.
     const items = [
-        { id: "home", icon: Home, label: "Home", href: "/hero" },
+        { id: "home", icon: Home, label: "Home", href: "/" },
         ...(isAuthenticated ? [
             { id: "dashboard", icon: Layout, label: "Dashboard", href: "/dashboard" },
             { id: "roadmap", icon: Map, label: "Roadmap", href: "/roadmap" },
@@ -31,33 +33,19 @@ const FloatingDock = () => {
     };
 
     return (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-none">
-            <motion.div
-                className="flex items-center gap-1.5 p-1.5 rounded-full bg-[var(--bg-elevated)]/80 backdrop-blur-xl border border-[var(--border-soft)] shadow-2xl shadow-black/10 pointer-events-auto"
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                onMouseLeave={() => setHoveredIndex(null)}
-            >
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100]">
+            <Dock>
                 {items.map((item) => {
                     const isActive = location.pathname === item.href || (item.href !== "/" && location.pathname.startsWith(item.href));
-
+                    
                     return (
-                        <div
+                        <DockIcon
                             key={item.id}
-                            className="relative group cursor-pointer"
-                            onMouseEnter={() => setHoveredIndex(item.id)}
                             onClick={() => handleNavigation(item.href)}
+                            onMouseEnter={() => setHoveredIndex(item.id)}
+                            onMouseLeave={() => setHoveredIndex(null)}
+                            className={isActive ? "text-[var(--apple-blue)]" : "text-zinc-600 dark:text-zinc-400"}
                         >
-                            {hoveredIndex === item.id && (
-                                <motion.div
-                                    layoutId="dock-highlight"
-                                    className="absolute inset-0 bg-[var(--surface-soft)] rounded-full -z-10"
-                                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                                />
-                            )}
-
-                            {/* Tooltip */}
                             <AnimatePresence>
                                 {hoveredIndex === item.id && (
                                     <motion.div
@@ -65,48 +53,33 @@ const FloatingDock = () => {
                                         animate={{ opacity: 1, y: 0, x: "-50%" }}
                                         exit={{ opacity: 0, y: 10, x: "-50%" }}
                                         transition={{ duration: 0.15 }}
-                                        className="absolute -top-12 left-1/2 px-3 py-1.5 bg-[var(--bg-elevated)] text-[var(--text-primary)] text-xs font-semibold rounded-lg shadow-lg border border-[var(--border-soft)] whitespace-nowrap pointer-events-none"
+                                        className="absolute -top-12 left-1/2 px-2.5 py-1.5 bg-[var(--bg-elevated)] text-[var(--text-primary)] text-xs font-semibold rounded-lg shadow-md border border-[var(--border-soft)] whitespace-nowrap pointer-events-none"
                                     >
                                         {item.label}
-                                        {/* Tooltip Arrow */}
                                         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--bg-elevated)] border-b border-r border-[var(--border-soft)] rotate-45" />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-
-                            <div className={cn(
-                                "w-11 h-11 flex items-center justify-center rounded-full transition-colors duration-200 z-10 relative",
-                                isActive ? "text-[var(--apple-blue)]" : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]"
-                            )}>
-                                <item.icon className="w-5 h-5" />
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="dock-active-dot"
-                                        className="absolute bottom-1 w-1 h-1 rounded-full bg-[var(--apple-blue)]"
-                                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                                    />
-                                )}
-                            </div>
-                        </div>
+                            <item.icon className="w-[45%] h-[45%]" />
+                            {isActive && (
+                                <motion.div
+                                    layoutId="dock-active-dot"
+                                    className="absolute bottom-[15%] w-1 h-1 rounded-full bg-[var(--apple-blue)]"
+                                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                />
+                            )}
+                        </DockIcon>
                     );
                 })}
 
-                <div className="w-[1px] h-8 bg-[var(--border-soft)] mx-1" />
+                <DockSeparator />
 
-                {/* Theme Toggle */}
-                <div
-                    className="relative group cursor-pointer"
-                    onMouseEnter={() => setHoveredIndex('theme')}
+                <DockIcon
                     onClick={toggleTheme}
+                    onMouseEnter={() => setHoveredIndex('theme')}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    className="text-zinc-600 dark:text-zinc-400"
                 >
-                    {hoveredIndex === 'theme' && (
-                        <motion.div
-                            layoutId="dock-highlight"
-                            className="absolute inset-0 bg-[var(--surface-soft)] rounded-full -z-10"
-                            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                        />
-                    )}
-
                     <AnimatePresence>
                         {hoveredIndex === 'theme' && (
                             <motion.div
@@ -114,37 +87,26 @@ const FloatingDock = () => {
                                 animate={{ opacity: 1, y: 0, x: "-50%" }}
                                 exit={{ opacity: 0, y: 10, x: "-50%" }}
                                 transition={{ duration: 0.15 }}
-                                className="absolute -top-12 left-1/2 px-3 py-1.5 bg-[var(--bg-elevated)] text-[var(--text-primary)] text-xs font-semibold rounded-lg shadow-lg border border-[var(--border-soft)] whitespace-nowrap pointer-events-none"
+                                className="absolute -top-12 left-1/2 px-2.5 py-1.5 bg-[var(--bg-elevated)] text-[var(--text-primary)] text-xs font-semibold rounded-lg shadow-md border border-[var(--border-soft)] whitespace-nowrap pointer-events-none"
                             >
                                 {isDark ? "Light Mode" : "Dark Mode"}
                                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--bg-elevated)] border-b border-r border-[var(--border-soft)] rotate-45" />
                             </motion.div>
                         )}
                     </AnimatePresence>
+                    {isDark ? <FiSun className="w-[45%] h-[45%]" /> : <FiMoon className="w-[45%] h-[45%]" />}
+                </DockIcon>
 
-                    <div className="w-11 h-11 flex items-center justify-center rounded-full transition-colors duration-200 text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]">
-                        {isDark ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
-                    </div>
-                </div>
-
-                {/* Logout (if authenticated) */}
                 {isAuthenticated && (
-                    <div
-                        className="relative group cursor-pointer"
-                        onMouseEnter={() => setHoveredIndex('logout')}
+                    <DockIcon
                         onClick={() => {
                             logout();
                             navigate('/');
                         }}
+                        onMouseEnter={() => setHoveredIndex('logout')}
+                        onMouseLeave={() => setHoveredIndex(null)}
+                        className="text-zinc-600 dark:text-zinc-400 hover:text-[#FF375F] dark:hover:text-[#FF375F]"
                     >
-                        {hoveredIndex === 'logout' && (
-                            <motion.div
-                                layoutId="dock-highlight"
-                                className="absolute inset-0 bg-[#FF375F]/10 rounded-full -z-10"
-                                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                            />
-                        )}
-
                         <AnimatePresence>
                             {hoveredIndex === 'logout' && (
                                 <motion.div
@@ -152,20 +114,17 @@ const FloatingDock = () => {
                                     animate={{ opacity: 1, y: 0, x: "-50%" }}
                                     exit={{ opacity: 0, y: 10, x: "-50%" }}
                                     transition={{ duration: 0.15 }}
-                                    className="absolute -top-12 left-1/2 px-3 py-1.5 bg-[#FF375F] text-white text-xs font-semibold rounded-lg shadow-lg whitespace-nowrap pointer-events-none"
+                                    className="absolute -top-12 left-1/2 px-2.5 py-1.5 bg-[#FF375F] text-white text-xs font-semibold rounded-lg shadow-md whitespace-nowrap pointer-events-none"
                                 >
                                     Logout
                                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#FF375F] rotate-45" />
                                 </motion.div>
                             )}
                         </AnimatePresence>
-
-                        <div className="w-11 h-11 flex items-center justify-center rounded-full transition-colors duration-200 text-[var(--text-secondary)] group-hover:text-[#FF375F]">
-                            <LogOut className="w-5 h-5" />
-                        </div>
-                    </div>
+                        <LogOut className="w-[45%] h-[45%]" />
+                    </DockIcon>
                 )}
-            </motion.div>
+            </Dock>
         </div>
     );
 };

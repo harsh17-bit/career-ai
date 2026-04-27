@@ -107,31 +107,31 @@ export default function OtpVerificationModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 dark:bg-black/80 px-4 backdrop-blur-sm"
         >
           <motion.div
             initial={{ opacity: 0, y: 18, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.98 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full max-w-xl rounded-[28px] border border-white/10 bg-[#0a0f18] px-6 py-7 text-white shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:px-8"
+            className="w-full max-w-xl rounded-[28px] border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0a0f18] px-6 py-7 text-slate-900 dark:text-white shadow-2xl shadow-slate-200/50 dark:shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:px-8"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300/80">
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-300/80">
                   Verification Code
                 </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-white">
+                <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
                   Enter the 6-digit code
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-white/55">
+                <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-white/55">
                   We sent a code to {email}. It expires in 10 minutes.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full p-2 text-white/50 transition hover:bg-white/5 hover:text-white"
+                className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-900 dark:text-white/50 transition dark:hover:bg-white/5 dark:hover:text-white"
                 aria-label="Close verification modal"
               >
                 <FiX className="h-5 w-5" />
@@ -145,7 +145,7 @@ export default function OtpVerificationModal({
                     <input
                       key={`left-${index}`}
                       ref={(node) => {
-                        inputRefs.current[index] = node;
+                         inputRefs.current[index] = node;
                       }}
                       type="text"
                       inputMode="numeric"
@@ -157,12 +157,12 @@ export default function OtpVerificationModal({
                       }
                       onKeyDown={(event) => handleKeyDown(index, event)}
                       onPaste={index === 0 ? handlePaste : undefined}
-                      className="h-14 w-12 rounded-2xl border border-white/15 bg-white/5 text-center text-2xl font-semibold text-white outline-none transition focus:border-cyan-300 focus:bg-white/10 focus:shadow-[0_0_0_4px_rgba(34,211,238,0.12)]"
+                      className="h-14 w-12 rounded-2xl border border-slate-200 bg-slate-50 text-center text-2xl font-semibold text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(6,182,212,0.12)] dark:border-white/15 dark:bg-white/5 dark:text-white dark:focus:border-cyan-300 dark:focus:bg-white/10 dark:focus:shadow-[0_0_0_4px_rgba(34,211,238,0.12)]"
                     />
                   ))}
                 </div>
 
-                <div className="text-3xl font-semibold text-white/70">•</div>
+                <div className="text-3xl font-semibold text-slate-300 dark:text-white/70">•</div>
 
                 <div className="flex gap-2 sm:gap-3">
                   {digits.slice(3).map((digit, index) => {
@@ -182,16 +182,16 @@ export default function OtpVerificationModal({
                           updateDigit(actualIndex, event.target.value)
                         }
                         onKeyDown={(event) => handleKeyDown(actualIndex, event)}
-                        className="h-14 w-12 rounded-2xl border border-white/15 bg-white/5 text-center text-2xl font-semibold text-white outline-none transition focus:border-cyan-300 focus:bg-white/10 focus:shadow-[0_0_0_4px_rgba(34,211,238,0.12)]"
+                        className="h-14 w-12 rounded-2xl border border-slate-200 bg-slate-50 text-center text-2xl font-semibold text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(6,182,212,0.12)] dark:border-white/15 dark:bg-white/5 dark:text-white dark:focus:border-cyan-300 dark:focus:bg-white/10 dark:focus:shadow-[0_0_0_4px_rgba(34,211,238,0.12)]"
                       />
                     );
                   })}
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-white/60">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
-                  <FiClock className="h-4 w-4 text-cyan-300" />
+              <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+                <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
+                  <FiClock className="h-4 w-4 text-cyan-600 dark:text-cyan-300" />
                   {isExpired
                     ? 'Code expired'
                     : `Expires in ${formatRemaining(remainingSeconds)}`}
@@ -200,7 +200,7 @@ export default function OtpVerificationModal({
                   type="button"
                   onClick={handleResend}
                   disabled={resending}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 font-medium text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
                 >
                   <FiRotateCcw className="h-4 w-4" />
                   Resend code
@@ -218,7 +218,7 @@ export default function OtpVerificationModal({
                   Verify Email
                 </Button>
                 {isExpired && (
-                  <p className="mt-3 text-center text-sm text-amber-300">
+                  <p className="mt-3 text-center text-sm text-amber-600 dark:text-amber-300">
                     Your code expired. Request a new one to continue.
                   </p>
                 )}
