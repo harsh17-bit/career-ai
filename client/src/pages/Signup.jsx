@@ -132,14 +132,16 @@ export default function Signup() {
   };
 
   return (
-    <div className="auth-page auth-page-signup relative min-h-screen overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
+    <div className="auth-page auth-page-signup relative min-h-screen overflow-hidden px-3 pb-8 pt-16 sm:px-6 sm:pb-10 sm:pt-24 lg:px-8">
       <div
-        className={`absolute left-[-6rem] top-24 h-72 w-72 rounded-full blur-3xl ${isDark ? 'bg-blue-500/20' : 'bg-blue-500/15'
-          }`}
+        className={`absolute left-[-5rem] top-16 h-52 w-52 rounded-full blur-3xl sm:left-[-6rem] sm:top-24 sm:h-72 sm:w-72 ${
+          isDark ? 'bg-blue-500/20' : 'bg-blue-500/15'
+        }`}
       />
       <div
-        className={`absolute bottom-10 right-[-5rem] h-80 w-80 rounded-full blur-3xl ${isDark ? 'bg-cyan-400/16' : 'bg-cyan-400/12'
-          }`}
+        className={`absolute bottom-4 right-[-4rem] h-56 w-56 rounded-full blur-3xl sm:bottom-10 sm:right-[-5rem] sm:h-80 sm:w-80 ${
+          isDark ? 'bg-cyan-400/16' : 'bg-cyan-400/12'
+        }`}
       />
 
       <motion.div
@@ -149,12 +151,13 @@ export default function Signup() {
         className="relative z-10 mx-auto w-full max-w-xl"
       >
         <div
-          className={`rounded-[28px] border p-6 sm:p-8 ${isDark
+          className={`rounded-[24px] border p-4 sm:rounded-[28px] sm:p-8 ${
+            isDark
               ? 'border-white/10 bg-slate-950/75 shadow-[0_24px_80px_rgba(2,6,23,0.62)]'
               : 'border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]'
-            }`}
+          }`}
         >
-          <div className="mb-6 flex items-center justify-center gap-2">
+          <div className="mb-5 flex items-center justify-center gap-2 sm:mb-6">
             <span className="site-header-name">Career.AI</span>
           </div>
 
@@ -174,7 +177,10 @@ export default function Signup() {
             place.
           </p> */}
 
-          <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-6 space-y-3.5 sm:mt-7 sm:space-y-4"
+          >
             <Input
               label="Full Name"
               type="text"
@@ -228,16 +234,18 @@ export default function Signup() {
           </form>
 
           <p
-            className={`mt-8 text-center text-sm ${isDark ? 'text-slate-300' : 'text-slate-500'
-              }`}
+            className={`mt-6 text-center text-xs sm:mt-8 sm:text-sm ${
+              isDark ? 'text-slate-300' : 'text-slate-500'
+            }`}
           >
             Already have an account?{' '}
             <Link
               to="/login"
-              className={`font-semibold ${isDark
+              className={`font-semibold ${
+                isDark
                   ? 'text-cyan-300 hover:text-cyan-200'
                   : 'text-blue-600 hover:text-blue-700'
-                }`}
+              }`}
             >
               Sign in
             </Link>

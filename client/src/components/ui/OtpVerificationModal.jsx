@@ -107,24 +107,24 @@ export default function OtpVerificationModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 dark:bg-black/80 px-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-slate-900/20 p-3 backdrop-blur-sm dark:bg-black/80 sm:items-center sm:px-4"
         >
           <motion.div
             initial={{ opacity: 0, y: 18, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.98 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full max-w-xl rounded-[28px] border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0a0f18] px-6 py-7 text-slate-900 dark:text-white shadow-2xl shadow-slate-200/50 dark:shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:px-8"
+            className="max-h-[calc(100dvh-1.5rem)] w-full max-w-xl overflow-y-auto rounded-[24px] border border-slate-200 bg-white px-4 py-5 text-slate-900 shadow-2xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#0a0f18] dark:text-white dark:shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:rounded-[28px] sm:px-8 sm:py-7"
           >
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start justify-between gap-3 sm:gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-300/80">
                   Verification Code
                 </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
                   Enter the 6-digit code
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-white/55">
+                <p className="mt-2 break-words text-sm leading-6 text-slate-500 dark:text-white/55">
                   We sent a code to {email}. It expires in 10 minutes.
                 </p>
               </div>
@@ -138,14 +138,14 @@ export default function OtpVerificationModal({
               </button>
             </div>
 
-            <div className="mt-8 flex flex-col items-center gap-5">
-              <div className="flex items-center gap-4">
+            <div className="mt-6 flex flex-col items-center gap-5 sm:mt-8">
+              <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
                 <div className="flex gap-2 sm:gap-3">
                   {digits.slice(0, 3).map((digit, index) => (
                     <input
                       key={`left-${index}`}
                       ref={(node) => {
-                         inputRefs.current[index] = node;
+                        inputRefs.current[index] = node;
                       }}
                       type="text"
                       inputMode="numeric"
@@ -157,12 +157,14 @@ export default function OtpVerificationModal({
                       }
                       onKeyDown={(event) => handleKeyDown(index, event)}
                       onPaste={index === 0 ? handlePaste : undefined}
-                      className="h-14 w-12 rounded-2xl border border-slate-200 bg-slate-50 text-center text-2xl font-semibold text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(6,182,212,0.12)] dark:border-white/15 dark:bg-white/5 dark:text-white dark:focus:border-cyan-300 dark:focus:bg-white/10 dark:focus:shadow-[0_0_0_4px_rgba(34,211,238,0.12)]"
+                      className="h-12 w-10 rounded-xl border border-slate-200 bg-slate-50 text-center text-xl font-semibold text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(6,182,212,0.12)] dark:border-white/15 dark:bg-white/5 dark:text-white dark:focus:border-cyan-300 dark:focus:bg-white/10 dark:focus:shadow-[0_0_0_4px_rgba(34,211,238,0.12)] sm:h-14 sm:w-12 sm:rounded-2xl sm:text-2xl"
                     />
                   ))}
                 </div>
 
-                <div className="text-3xl font-semibold text-slate-300 dark:text-white/70">•</div>
+                <div className="hidden text-3xl font-semibold text-slate-300 dark:text-white/70 sm:block">
+                  •
+                </div>
 
                 <div className="flex gap-2 sm:gap-3">
                   {digits.slice(3).map((digit, index) => {
@@ -182,15 +184,15 @@ export default function OtpVerificationModal({
                           updateDigit(actualIndex, event.target.value)
                         }
                         onKeyDown={(event) => handleKeyDown(actualIndex, event)}
-                        className="h-14 w-12 rounded-2xl border border-slate-200 bg-slate-50 text-center text-2xl font-semibold text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(6,182,212,0.12)] dark:border-white/15 dark:bg-white/5 dark:text-white dark:focus:border-cyan-300 dark:focus:bg-white/10 dark:focus:shadow-[0_0_0_4px_rgba(34,211,238,0.12)]"
+                        className="h-12 w-10 rounded-xl border border-slate-200 bg-slate-50 text-center text-xl font-semibold text-slate-900 outline-none transition focus:border-cyan-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(6,182,212,0.12)] dark:border-white/15 dark:bg-white/5 dark:text-white dark:focus:border-cyan-300 dark:focus:bg-white/10 dark:focus:shadow-[0_0_0_4px_rgba(34,211,238,0.12)] sm:h-14 sm:w-12 sm:rounded-2xl sm:text-2xl"
                       />
                     );
                   })}
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
-                <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
+              <div className="flex w-full flex-col items-center justify-center gap-2 text-sm sm:flex-row sm:flex-wrap sm:gap-3">
+                <span className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60 sm:w-auto">
                   <FiClock className="h-4 w-4 text-cyan-600 dark:text-cyan-300" />
                   {isExpired
                     ? 'Code expired'
@@ -200,7 +202,7 @@ export default function OtpVerificationModal({
                   type="button"
                   onClick={handleResend}
                   disabled={resending}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 sm:w-auto"
                 >
                   <FiRotateCcw className="h-4 w-4" />
                   Resend code
