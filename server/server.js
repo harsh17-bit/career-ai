@@ -62,6 +62,9 @@ app.use('/api/career', careerRoutes);
 app.use('/api/roadmap', roadmapRoutes);
 app.use('/api/chat', chatRoutes);
 
+// Serve email template images statically
+app.use('/images', express.static(path.join(__dirname, 'templates', 'images')));
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

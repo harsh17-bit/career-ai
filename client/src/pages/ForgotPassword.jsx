@@ -88,7 +88,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="auth-page auth-page-login relative min-h-screen overflow-hidden px-3 pb-8 pt-16 sm:px-6 sm:pb-10 sm:pt-24 lg:px-8">
+    <div className="auth-page auth-page-login relative min-h-screen overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
       <div
         className={`absolute inset-0 ${
           isDark
@@ -104,7 +104,7 @@ export default function ForgotPassword() {
         className="relative z-10 mx-auto w-full max-w-xl"
       >
         <div
-          className={`rounded-[24px] border p-4 sm:rounded-[28px] sm:p-8 ${
+          className={`rounded-[28px] border p-6 sm:p-8 ${
             isDark
               ? 'border-white/10 bg-slate-950/75 shadow-[0_24px_80px_rgba(2,6,23,0.62)]'
               : 'border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]'
@@ -154,22 +154,19 @@ export default function ForgotPassword() {
             //   </Button>
             // </form> */}
 
-          <form
-            onSubmit={handleResetPassword}
-            className="mt-6 space-y-3.5 sm:mt-7 sm:space-y-4"
-          >
+          <form onSubmit={handleResetPassword} className="mt-7 space-y-4">
             <div>
               <label
-                className={`mb-2 block text-sm font-medium sm:mb-3 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}
+                className={`block text-sm font-medium mb-3 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}
               >
                 Verification Code
               </label>
               <p
-                className={`mb-3 text-xs sm:mb-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
+                className={`text-xs mb-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
               >
                 Enter the 6-digit code sent to your device.
               </p>
-              <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
+              <div className="flex items-center justify-center gap-2">
                 {[0, 1, 2].map((i) => (
                   <input
                     key={i}
@@ -191,7 +188,7 @@ export default function ForgotPassword() {
                       }
                     }}
                     id={`otp-${i}`}
-                    className={`h-11 w-10 rounded-lg border-2 text-center text-base font-semibold transition-colors sm:h-12 sm:w-12 sm:text-lg ${
+                    className={`w-12 h-12 text-center text-lg font-semibold rounded-lg border-2 transition-colors ${
                       isDark
                         ? 'bg-slate-900 border-slate-700 text-white focus:border-cyan-400 focus:outline-none'
                         : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:outline-none'
@@ -199,7 +196,7 @@ export default function ForgotPassword() {
                   />
                 ))}
                 <span
-                  className={`hidden text-2xl font-light sm:block ${isDark ? 'text-slate-500' : 'text-slate-400'}`}
+                  className={`text-2xl font-light ${isDark ? 'text-slate-500' : 'text-slate-400'}`}
                 >
                   ·
                 </span>
@@ -224,7 +221,7 @@ export default function ForgotPassword() {
                       }
                     }}
                     id={`otp-${i}`}
-                    className={`h-11 w-10 rounded-lg border-2 text-center text-base font-semibold transition-colors sm:h-12 sm:w-12 sm:text-lg ${
+                    className={`w-12 h-12 text-center text-lg font-semibold rounded-lg border-2 transition-colors ${
                       isDark
                         ? 'bg-slate-900 border-slate-700 text-white focus:border-cyan-400 focus:outline-none'
                         : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500 focus:outline-none'
@@ -263,7 +260,7 @@ export default function ForgotPassword() {
           </form>
 
           <p
-            className={`mt-6 text-center text-xs sm:mt-8 sm:text-sm ${
+            className={`mt-8 text-center text-sm ${
               isDark ? 'text-slate-300' : 'text-slate-500'
             }`}
           >

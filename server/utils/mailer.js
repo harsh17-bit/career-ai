@@ -1,4 +1,10 @@
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const createTransporter = () => {
   const user = process.env.EMAIL_USER || process.env.SMTP_USER;
@@ -246,7 +252,7 @@ const chip = (text, style = 'blue') => {
   return `<div style="padding:14px 16px;border-radius:18px;border:1px solid ${style === 'blue' ? 'rgba(79,110,247,0.18)' : style === 'cyan' ? 'rgba(34,211,238,0.18)' : 'rgba(15,23,42,0.08)'};${styles[style]}font-size:14px;line-height:1.7;">${text}</div>`;
 };
 
-export const sendEmail = async ({ to, subject, text, html }) => {
+export const sendEmail = async ({ to, subject, text, html, attachments = [] }) => {
   const transporter = createTransporter();
   if (!transporter) {
     throw new Error(
@@ -260,6 +266,7 @@ export const sendEmail = async ({ to, subject, text, html }) => {
     subject,
     text,
     html,
+    attachments,
   });
 };
 
@@ -286,12 +293,33 @@ export const sendVerificationEmail = async ({ to, name, otp }) => {
 export const sendWelcomeEmail = async ({ to, name }) => {
   const subject = 'Welcome to CareerAI';
   const text = `Hi ${name},\n\nWelcome to CareerAI. Your account has been verified successfully. You can now explore your assessment, roadmap, and career recommendations.\n\nWe’re glad to have you here.`;
-  const html = shell({
-    label: 'Welcome',
-    title: 'Your account is ready',
-    intro:
-      'You are in. CareerAI is now set up to guide you through assessment, roadmap planning, and personalized recommendations.',
-    content: `
+  // Try to render the HTML template file if present (minimal template rendering)
+  try {
+    const tplPath = path.join(
+      __dirname,
+      '..',
+      'templates',
+      'welcome_email.html'
+    );
+    let tpl = await fs.promises.readFile(tplPath, 'utf8');
+
+    // Simple placeholder replacement for text and links
+    tpl = tpl
+      .replace(/{{\s*name\s*}}/g, escapeHtml(name || ''))
+      .replace(/{{\s*cta_link\s*}}/g, escapeHtml(process.env.APP_URL || 'https://career-ai-3btq.onrender.com/'))
+      .replace(/{{\s*support_link\s*}}/g, escapeHtml(process.env.SUPPORT_URL || 'https://careerai.com/support'));
+
+    console.log('Sending welcome email using template:', tplPath);
+
+    return sendEmail({ to, subject, text, html: tpl });
+  } catch (err) {
+    // Fallback to the inline shell renderer if template not found or read fails
+    const html = shell({
+      // label: 'Welcome',
+      title: 'Your account is ready',
+      intro:
+        'You are in. CareerAI is now set up to guide you through assessment, roadmap planning, and personalized recommendations.',
+      content: `
       <p style="margin:0;font-size:14px;line-height:1.8;color:${theme.muted};">Hi ${escapeHtml(
         name
       )},</p>
@@ -301,9 +329,10 @@ export const sendWelcomeEmail = async ({ to, name }) => {
         ${chip('Use the dashboard to export your progress and revisit recommendations anytime.', 'white')}
       </div>
       <p style="margin:18px 0 0;font-size:14px;line-height:1.8;color:${theme.muted};">We’re glad to have you here.</p>`,
-  });
+    });
 
-  return sendEmail({ to, subject, text, html });
+    return sendEmail({ to, subject, text, html });
+  }
 };
 
 export const sendPasswordResetOtpEmail = async ({ to, name, otp }) => {
