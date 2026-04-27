@@ -44,6 +44,11 @@ app.use(
   })
 );
 
+// Health check (Must be before rate limiter so Render health checks don't get 429'd)
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -65,10 +70,7 @@ app.use('/api/chat', chatRoutes);
 // Serve email template images statically
 app.use('/images', express.static(path.join(__dirname, 'templates', 'images')));
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+
 
 if (process.env.NODE_ENV === 'production') {
   const clientDistPath = path.resolve(__dirname, '../client/dist');
