@@ -12,6 +12,8 @@ import {
   FiCheckCircle,
   FiTool,
   FiRotateCcw,
+  FiUser,
+  FiMap,
 } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -124,10 +126,34 @@ export default function Dashboard() {
     },
   ];
 
+  const quickActions = [
+    {
+      label: 'View Profile',
+      icon: FiUser,
+      onClick: () => navigate('/profile'),
+    },
+    {
+      label: 'Open Roadmap',
+      icon: FiMap,
+      onClick: () =>
+        navigate(
+          `/roadmap?career=${encodeURIComponent(topCareer?.name || '')}`
+        ),
+    },
+    {
+      label: 'Retake Assessment',
+      icon: FiRotateCcw,
+      onClick: () => navigate('/assessment'),
+    },
+  ];
+
   return (
     <div className="dashboard-page">
+      <a href="#dashboard-main" className="dashboard-skip-link">
+        Skip to dashboard content
+      </a>
       <div className="dashboard-bg" />
-      <div className="dashboard-content">
+      <main id="dashboard-main" className="dashboard-content">
         {/* Header */}
         <div className="dashboard-header">
           <div>
@@ -148,18 +174,37 @@ export default function Dashboard() {
           </Button>
         </div>
 
+        <section className="dashboard-quick-actions" aria-label="Quick actions">
+          {quickActions.map((action) => (
+            <button
+              key={action.label}
+              type="button"
+              className="quick-action-btn"
+              onClick={action.onClick}
+            >
+              <action.icon className="quick-action-icon" />
+              <span>{action.label}</span>
+              <FiChevronRight className="quick-action-chevron" />
+            </button>
+          ))}
+        </section>
+
         {/* Stats Grid */}
-        <div className="dashboard-stats">
+        <section className="dashboard-stats" aria-label="Dashboard stats">
           {stats.map((stat) => (
-            <div key={stat.label} className="stat-card">
+            <article
+              key={stat.label}
+              className="stat-card"
+              aria-label={stat.label}
+            >
               <div className="stat-icon">
                 <stat.icon />
               </div>
               <p className="stat-value">{stat.value}</p>
               <p className="stat-label">{stat.label}</p>
-            </div>
+            </article>
           ))}
-        </div>
+        </section>
 
         {/* Skill Gap */}
         <div className="dashboard-skill-gap">
@@ -200,13 +245,16 @@ export default function Dashboard() {
         </div>
 
         {/* Recommendations */}
-        <div className="dashboard-recommendations">
+        <section
+          className="dashboard-recommendations"
+          aria-label="Career recommendations"
+        >
           <h2 className="recommendations-title">
             <FiStar /> Recommended Careers
           </h2>
           <div className="recommendations-grid">
             {recommendations.map((career, index) => (
-              <div key={career.name} className="career-card">
+              <article key={career.name} className="career-card">
                 <div className="career-rank">
                   <div className="rank-badge">#{index + 1}</div>
                   <div className="match-percent">
@@ -262,11 +310,11 @@ export default function Dashboard() {
                     <FiChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

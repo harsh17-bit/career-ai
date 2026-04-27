@@ -27,11 +27,215 @@ body {
 
 /* App Shell */
 .app-shell {
+  position: relative;
+  isolation: isolate;
   background-color: var(--bg-base);
   color: var(--text-primary);
   transition:
     background-color var(--transition-base),
     color var(--transition-base);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.global-antigravity-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.global-antigravity-stage {
+  position: absolute;
+  inset: -5%;
+  opacity: 0.75;
+}
+
+.global-antigravity-stage canvas {
+  pointer-events: none !important;
+}
+
+.global-antigravity-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 18% 14%,
+      rgba(56, 189, 248, 0.14),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 82% 28%,
+      rgba(129, 140, 248, 0.1),
+      transparent 40%
+    ),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.35), rgba(2, 6, 23, 0.7));
+}
+
+.global-antigravity-bg[data-tone='auth'] .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 18% 14%,
+      rgba(34, 211, 238, 0.12),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 82% 28%,
+      rgba(59, 130, 246, 0.1),
+      transparent 38%
+    ),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.42), rgba(2, 6, 23, 0.78));
+}
+
+.global-antigravity-bg[data-tone='product'] .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 20% 16%,
+      rgba(56, 189, 248, 0.15),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 80% 26%,
+      rgba(96, 165, 250, 0.1),
+      transparent 40%
+    ),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.32), rgba(2, 6, 23, 0.66));
+}
+
+.global-antigravity-bg[data-tone='focus'] .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 22% 16%,
+      rgba(34, 211, 238, 0.14),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 78% 24%,
+      rgba(59, 130, 246, 0.1),
+      transparent 39%
+    ),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.36), rgba(2, 6, 23, 0.72));
+}
+
+.global-antigravity-bg[data-tone='soft'] .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 18% 14%,
+      rgba(125, 211, 252, 0.1),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 80% 26%,
+      rgba(129, 140, 248, 0.08),
+      transparent 40%
+    ),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.28), rgba(2, 6, 23, 0.58));
+}
+
+html.theme-light .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 18% 14%,
+      rgba(59, 130, 246, 0.1),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 82% 28%,
+      rgba(79, 70, 229, 0.08),
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(248, 250, 252, 0.45),
+      rgba(241, 245, 249, 0.72)
+    );
+}
+
+html.theme-light
+  .global-antigravity-bg[data-tone='auth']
+  .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 18% 14%,
+      rgba(14, 165, 233, 0.08),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 82% 28%,
+      rgba(37, 99, 235, 0.07),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(248, 250, 252, 0.56),
+      rgba(241, 245, 249, 0.82)
+    );
+}
+
+html.theme-light
+  .global-antigravity-bg[data-tone='product']
+  .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 20% 16%,
+      rgba(56, 189, 248, 0.1),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 80% 26%,
+      rgba(79, 70, 229, 0.07),
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(248, 250, 252, 0.48),
+      rgba(241, 245, 249, 0.74)
+    );
+}
+
+html.theme-light
+  .global-antigravity-bg[data-tone='focus']
+  .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 22% 16%,
+      rgba(59, 130, 246, 0.1),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 78% 24%,
+      rgba(14, 165, 233, 0.08),
+      transparent 39%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(248, 250, 252, 0.52),
+      rgba(241, 245, 249, 0.78)
+    );
+}
+
+html.theme-light
+  .global-antigravity-bg[data-tone='soft']
+  .global-antigravity-overlay {
+  background:
+    radial-gradient(
+      circle at 18% 14%,
+      rgba(148, 163, 184, 0.08),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 80% 26%,
+      rgba(129, 140, 248, 0.06),
+      transparent 40%
+    ),
+    linear-gradient(180deg, rgba(248, 250, 252, 0.46), rgba(241, 245, 249, 0.7));
+}
+
+.app-shell-content {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

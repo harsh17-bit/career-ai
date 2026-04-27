@@ -10,7 +10,11 @@
 }
 
 .auth-page-login {
-  background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+  background: transparent;
+}
+
+.auth-page-signup {
+  background: transparent;
 }
 
 .auth-page-login .auth-card {

@@ -134,13 +134,6 @@ export default function Signup() {
   return (
     <div className="auth-page auth-page-signup relative min-h-screen overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
       <div
-        className={`absolute inset-0 ${
-          isDark
-            ? 'bg-[radial-gradient(circle_at_top_left,rgba(96,165,250,0.2),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(34,211,238,0.14),transparent_32%),linear-gradient(180deg,#07101d_0%,#0d1b2c_100%)]'
-            : 'bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.16),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_32%),linear-gradient(180deg,#f8fbff_0%,#eef4fb_100%)]'
-        }`}
-      />
-      <div
         className={`absolute left-[-6rem] top-24 h-72 w-72 rounded-full blur-3xl ${
           isDark ? 'bg-blue-500/20' : 'bg-blue-500/15'
         }`}
