@@ -47,7 +47,7 @@ export default function Navbar() {
     if (href.startsWith('#')) {
       if (location.pathname !== '/') {
         navigate('/');
-        // The homepage might need time to mount before scrolling, 
+        // The homepage might need time to mount before scrolling,
         // but for now this works if they just navigate to /
         return;
       }
@@ -151,7 +151,7 @@ export default function Navbar() {
               initial={{ opacity: 0, y: -15, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -15, scale: 0.98 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
               className="absolute left-2 right-2 top-[calc(100%+12px)] p-3 rounded-3xl bg-[var(--bg-elevated)]/95 backdrop-blur-3xl border border-[var(--border-soft)] shadow-2xl flex flex-col gap-1 overflow-hidden z-50 lg:hidden"
             >
               <div className="flex flex-col p-1">
