@@ -78,9 +78,9 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="hero-title"
           >
-            Find Your Perfect
+            Step Into Future
             <br />
-            <span className="gradient-text">Career Path</span>
+            <span className="gradient-text">Perfect Path</span>
           </motion.h1>
 
           {/* Subtext */}
