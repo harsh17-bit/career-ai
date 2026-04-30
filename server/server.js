@@ -27,7 +27,8 @@ connectDB();
 // Security middleware
 // Configure helmet with a custom CSP that:
 //  - Allows blob: scripts (Vite code-splitting / web workers)
-//  - Allows Google Sign-In (accounts.google.com/gsi/client)
+//  - Allows Google Sign-In (accounts.google.com/gsi/client + gsi/style)
+//  - Allows Google Analytics (www.google-analytics.com)
 //  - Allows popups for third-party identity windows (GSI)
 app.use(
   helmet({
@@ -38,20 +39,39 @@ app.use(
         defaultSrc: ["'self'"],
         scriptSrc: [
           "'self'",
-          "'unsafe-inline'",   // Vite injects inline scripts in the HTML shell
-          "blob:",             // Vite code-splitting chunks & web workers
+          "'unsafe-inline'",              // Vite injects inline scripts in the HTML shell
+          "blob:",                         // Vite code-splitting chunks & web workers
           "https://accounts.google.com",
+          "https://www.googletagmanager.com",
         ],
         scriptSrcElem: [
           "'self'",
           "'unsafe-inline'",
           "blob:",
           "https://accounts.google.com",
+          "https://www.googletagmanager.com",
         ],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com",
+          "https://accounts.google.com",  // Google GSI loads its own stylesheet
+        ],
+        styleSrcElem: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com",
+          "https://accounts.google.com",  // accounts.google.com/gsi/style
+        ],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:", "blob:", "https:"],
-        connectSrc: ["'self'", "https://accounts.google.com"],
+        connectSrc: [
+          "'self'",
+          "https://accounts.google.com",
+          "https://www.google-analytics.com",   // Google Analytics
+          "https://analytics.google.com",
+          "https://www.googletagmanager.com",
+        ],
         frameSrc: ["https://accounts.google.com"],
         workerSrc: ["'self'", "blob:"],
       },
