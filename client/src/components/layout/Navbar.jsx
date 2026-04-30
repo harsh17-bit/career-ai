@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   FiBell,
   FiLogOut,
@@ -13,6 +13,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import useAuthStore from '../../store/authStore';
 import { useTheme } from '../../context/ThemeContext';
+import BrandLogo from '../ui/BrandLogo';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -69,9 +70,14 @@ export default function Navbar() {
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="container-apple site-header-wrap relative">
         <div className="site-header-shell">
-          <Link to="/" className="site-header-brand" aria-label="CareerAI home">
-            <span className="site-header-name">Career.AI</span>
-          </Link>
+          <BrandLogo
+            to="/"
+            label="Career.AI home"
+            className="site-header-brand"
+            textClassName="site-header-name"
+            badgeClassName="h-9 w-9 rounded-xl"
+            size={36}
+          />
 
           <nav className="site-header-nav" aria-label="Primary navigation">
             {navLinks.map((link) => (

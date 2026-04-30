@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FiArrowRight, FiLock, FiMail, FiStar, FiUser } from 'react-icons/fi';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
-import OtpVerificationModal from '../components/ui/OtpVerificationModal';
-import useAuthStore from '../store/authStore';
 import { authAPI } from '../services/api';
 import toast from 'react-hot-toast';
-import { useTheme } from '../context/ThemeContext';
-import { addNotification } from '../utils/notifications';
+import AuthSplitLayout from '../components/layout/AuthSplitLayout';
+import GoogleSignInButton from '../components/ui/GoogleSignInButton';
+import useAuthStore from '../store/authStore';
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -20,13 +17,7 @@ export default function Signup() {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [resending, setResending] = useState(false);
-  const [verificationOpen, setVerificationOpen] = useState(false);
-  const [verificationEmail, setVerificationEmail] = useState('');
-  const [verificationExpiresAt, setVerificationExpiresAt] = useState(null);
   const { login } = useAuthStore();
-  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   const validate = () => {
@@ -54,25 +45,23 @@ export default function Signup() {
         email: form.email,
         password: form.password,
       });
+
       if (res.data?.requiresVerification) {
-        setVerificationEmail(res.data.email || form.email);
-        setVerificationExpiresAt(
-          new Date(Date.now() + 10 * 60 * 1000).toISOString()
+        sessionStorage.setItem(
+          'pendingVerificationEmail',
+          res.data.email || form.email
         );
-        setVerificationOpen(true);
-        addNotification({
-          type: 'otp',
-          title: 'Verification code sent',
-          description: 'Check your inbox to verify your new account.',
-          href: '/signup',
-        });
         toast.success('Verification code sent to your email.');
+        navigate('/verify-email', {
+          state: {
+            email: res.data.email || form.email,
+          },
+        });
         return;
       }
 
-      login(res.data);
       toast.success('Account created successfully!');
-      navigate('/assessment');
+      navigate('/dashboard');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Signup failed');
     } finally {
@@ -80,182 +69,86 @@ export default function Signup() {
     }
   };
 
-  const handleVerifyOtp = async (otp) => {
-    setVerifying(true);
-    try {
-      const res = await authAPI.verifyOtp({
-        email: verificationEmail,
-        otp,
-      });
-      login(res.data);
-      addNotification({
-        type: 'otp',
-        title: 'Email verified',
-        description: 'Your account is ready and you can start the assessment.',
-        href: '/assessment',
-      });
-      toast.success('Email verified successfully!');
-      setVerificationOpen(false);
-      navigate('/assessment');
-    } catch (err) {
-      const message = err.response?.data?.message || 'Verification failed';
-      toast.error(message);
-
-      if (err.response?.data?.expired) {
-        setVerificationExpiresAt(
-          new Date(Date.now() + 10 * 60 * 1000).toISOString()
-        );
-      }
-    } finally {
-      setVerifying(false);
-    }
-  };
-
-  const handleResendOtp = async () => {
-    setResending(true);
-    try {
-      const res = await authAPI.resendOtp({ email: verificationEmail });
-      setVerificationExpiresAt(
-        new Date(Date.now() + 10 * 60 * 1000).toISOString()
-      );
-      toast.success(res.data?.message || 'Verification code resent.');
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Could not resend code');
-    } finally {
-      setResending(false);
-    }
-  };
-
-  const closeVerificationModal = () => {
-    if (verifying || resending) return;
-    setVerificationOpen(false);
-  };
-
   return (
-    <div className="auth-page auth-page-signup relative min-h-screen overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
-      <div
-        className={`absolute left-[-6rem] top-24 h-72 w-72 rounded-full blur-3xl ${
-          isDark ? 'bg-blue-500/20' : 'bg-blue-500/15'
-        }`}
-      />
-      <div
-        className={`absolute bottom-10 right-[-5rem] h-80 w-80 rounded-full blur-3xl ${
-          isDark ? 'bg-cyan-400/16' : 'bg-cyan-400/12'
-        }`}
-      />
+    <AuthSplitLayout
+      className="auth-page auth-page-signup"
+      title="Create your account"
+      description="Sign up to save your assessment, roadmap, and recommendations in one place."
+      logoLabel="Career.AI home"
+    >
+      <div className="auth-title-block">
+        <h1 className="auth-title">Sign up</h1>
+        <p className="auth-subtitle">
+          Create your account and start with a structured career path.
+        </p>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative z-10 mx-auto w-full max-w-xl"
-      >
-        <div
-          className={`rounded-[28px] border p-6 sm:p-8 ${
-            isDark
-              ? 'border-white/10 bg-slate-950/75 shadow-[0_24px_80px_rgba(2,6,23,0.62)]'
-              : 'border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]'
-          }`}
-        >
-          <div className="mb-6 flex items-center justify-center gap-2">
-            <span className="site-header-name">Career.AI</span>
-          </div>
+      <form onSubmit={handleSubmit} className="auth-form mt-8 space-y-5">
+        <Input
+          label="Full Name"
+          type="text"
+          tone="light"
+          autoComplete="name"
+          placeholder="Enter your full name"
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          error={errors.name}
+          className="auth-input-shell"
+        />
 
-          {/* <h1
-            className={`text-3xl font-extrabold tracking-tight ${
-              isDark ? 'text-white' : 'text-slate-900'
-            }`}
-          >
-            Create your account
-          </h1>
-          <p
-            className={`mt-3 text-sm leading-6 ${
-              isDark ? 'text-slate-300' : 'text-slate-500'
-            }`}
-          >
-            Sign up to save your assessment, roadmap, and recommendations in one
-            place.
-          </p> */}
+        <Input
+          label="Email"
+          type="email"
+          tone="light"
+          autoComplete="email"
+          placeholder="Enter your email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          error={errors.email}
+          className="auth-input-shell"
+        />
 
-          <form onSubmit={handleSubmit} className="mt-7 space-y-4">
-            <Input
-              label="Full Name"
-              type="text"
-              tone={isDark ? 'dark' : 'light'}
-              autoComplete="name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              error={errors.name}
-            />
-            <Input
-              label="Email Address"
-              type="email"
-              tone={isDark ? 'dark' : 'light'}
-              autoComplete="email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              error={errors.email}
-            />
-            <Input
-              label="Password"
-              type="password"
-              tone={isDark ? 'dark' : 'light'}
-              autoComplete="new-password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              error={errors.password}
-            />
-            <Input
-              label="Confirm Password"
-              type="password"
-              tone={isDark ? 'dark' : 'light'}
-              autoComplete="new-password"
-              value={form.confirmPassword}
-              onChange={(e) =>
-                setForm({ ...form, confirmPassword: e.target.value })
-              }
-              error={errors.confirmPassword}
-            />
+        <Input
+          label="Password"
+          type="password"
+          tone="light"
+          autoComplete="new-password"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          error={errors.password}
+          className="auth-input-shell"
+        />
 
-            <Button
-              type="submit"
-              className="w-full !rounded-2xl"
-              loading={loading}
-            >
-              Create Account
-            </Button>
-          </form>
+        <Input
+          label="Confirm Password"
+          type="password"
+          tone="light"
+          autoComplete="new-password"
+          value={form.confirmPassword}
+          onChange={(e) =>
+            setForm({ ...form, confirmPassword: e.target.value })
+          }
+          error={errors.confirmPassword}
+          className="auth-input-shell"
+        />
 
-          <p
-            className={`mt-8 text-center text-sm ${
-              isDark ? 'text-slate-300' : 'text-slate-500'
-            }`}
-          >
-            Already have an account?{' '}
-            <Link
-              to="/login"
-              className={`font-semibold ${
-                isDark
-                  ? 'text-cyan-300 hover:text-cyan-200'
-                  : 'text-blue-600 hover:text-blue-700'
-              }`}
-            >
-              Sign in
-            </Link>
-          </p>
-        </div>
-      </motion.div>
+        <Button type="submit" className="w-full !rounded-xl" loading={loading}>
+          Create account
+        </Button>
 
-      <OtpVerificationModal
-        isOpen={verificationOpen}
-        email={verificationEmail}
-        expiresAt={verificationExpiresAt}
-        verifying={verifying}
-        resending={resending}
-        onClose={closeVerificationModal}
-        onVerify={handleVerifyOtp}
-        onResend={handleResendOtp}
-      />
-    </div>
+        <GoogleSignInButton
+          mode="signup"
+          onSuccess={(data) => {
+            login(data);
+            navigate('/dashboard');
+          }}
+          className="pt-1"
+        />
+
+        <p className="auth-switch-link">
+          Already have an account? <Link to="/login">Sign in</Link>
+        </p>
+      </form>
+    </AuthSplitLayout>
   );
 }

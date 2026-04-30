@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import {
   FiStar,
   FiGithub,
@@ -9,6 +8,7 @@ import {
   FiShield,
   FiArrowUpRight,
 } from 'react-icons/fi';
+import BrandLogo from '../ui/BrandLogo';
 
 const footerLinks = {
   Explore: [
@@ -51,9 +51,14 @@ export default function Footer() {
       <div className="container-apple px-4 sm:px-6 pt-14 sm:pt-18 md:pt-24 pb-8 sm:pb-10 md:pb-12 relative z-10">
         <div className="footer-panel">
           <div className="footer-brand-block">
-            <span className="site-header-name" href="/home">
-              Career.AI
-            </span>
+            <BrandLogo
+              to="/"
+              label="Career.AI home"
+              className="footer-brand-link"
+              textClassName="text-white"
+              badgeClassName="h-11 w-11 rounded-[15px]"
+              size={44}
+            />
             <p className="footer-subtitle">
               Career guidance with a clean, focused, AI-first workflow. Discover
               your path, build your roadmap, and move with clarity.

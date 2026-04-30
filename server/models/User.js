@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     password: { type: String, required: true, minlength: 6 },
+    googleId: { type: String, default: '', index: true, sparse: true },
+    authProvider: {
+      type: String,
+      enum: ['local', 'google'],
+      default: 'local',
+    },
     avatar: { type: String, default: '' },
     isEmailVerified: { type: Boolean, default: false },
     emailVerificationOtpHash: { type: String, default: '' },

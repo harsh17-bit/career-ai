@@ -25,7 +25,14 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Security middleware
-app.use(helmet());
+// Configure helmet to allow popups for third-party identity windows (GSI)
+// and avoid blocking postMessage from the Google sign-in popup.
+app.use(
+  helmet({
+    crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
 const allowedOrigins = [
   process.env.CLIENT_URL,
@@ -69,8 +76,6 @@ app.use('/api/chat', chatRoutes);
 
 // Serve email template images statically
 app.use('/images', express.static(path.join(__dirname, 'templates', 'images')));
-
-
 
 if (process.env.NODE_ENV === 'production') {
   const clientDistPath = path.resolve(__dirname, '../client/dist');

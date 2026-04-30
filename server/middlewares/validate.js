@@ -26,6 +26,10 @@ export const loginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
+export const googleAuthSchema = z.object({
+  credential: z.string().min(10, 'Google credential is required'),
+});
+
 export const verifyOtpSchema = z.object({
   email: z.string().email('Invalid email address'),
   otp: z.string().length(6, 'Verification code must be 6 digits'),
@@ -39,11 +43,26 @@ export const forgotPasswordSchema = z.object({
   email: z.string().email('Invalid email address'),
 });
 
-export const resetPasswordSchema = z.object({
+export const verifyResetOtpSchema = z.object({
   email: z.string().email('Invalid email address'),
   otp: z.string().length(6, 'Reset code must be 6 digits'),
-  newPassword: z.string().min(6, 'Password must be at least 6 characters'),
 });
+
+export const resetPasswordSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[^A-Za-z0-9]/, 'Password must contain one special character'),
+    resetToken: z.string().optional(),
+    email: z.string().email('Invalid email address').optional(),
+    otp: z.string().length(6, 'Reset code must be 6 digits').optional(),
+  })
+  .refine(
+    (data) =>
+      Boolean(data.resetToken) || (Boolean(data.email) && Boolean(data.otp)),
+    { message: 'Provide a reset token or the email and reset code.' }
+  );
 
 export const assessmentSchema = z.object({
   educationLevel: z.string().min(1),

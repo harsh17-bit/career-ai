@@ -12,6 +12,7 @@ import Chatbot from './components/Chatbot';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import Assessment from './pages/Assessment';
 import Dashboard from './pages/Dashboard';
@@ -25,6 +26,11 @@ import FloatingDock from './components/lightswind/floating-dock';
 import Antigravity from './components/ui/Antigravity';
 
 const SIDEBAR_ROUTES = ['/dashboard', '/roadmap', '/profile'];
+const AUTH_ROUTES = ['/login', '/signup', '/verify-email', '/forgot-password'];
+
+function isPublicAuthRoute(pathname) {
+  return AUTH_ROUTES.some((route) => pathname.startsWith(route));
+}
 
 function getAntigravityPreset(pathname, isDark) {
   if (pathname === '/email-preview') {
@@ -55,7 +61,8 @@ function getAntigravityPreset(pathname, isDark) {
   if (
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
-    pathname.startsWith('/forgot-password')
+    pathname.startsWith('/forgot-password') ||
+    pathname.startsWith('/verify-email')
   ) {
     return {
       tone: 'auth',
@@ -165,14 +172,9 @@ function ProtectedRoute({ children }) {
 }
 
 function PublicRoute({ children }) {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   if (isAuthenticated) {
-    return (
-      <Navigate
-        to={user?.assessmentCompleted ? '/dashboard' : '/assessment'}
-        replace
-      />
-    );
+    return <Navigate to="/dashboard" replace />;
   }
   return children;
 }
@@ -181,6 +183,7 @@ function AppShell() {
   const { isDark } = useTheme();
   const location = useLocation();
   const isEmailPreviewRoute = location.pathname === '/email-preview';
+  const isAuthRoute = isPublicAuthRoute(location.pathname);
   const isSidebarRoute = SIDEBAR_ROUTES.some((r) =>
     location.pathname.startsWith(r)
   );
@@ -202,6 +205,14 @@ function AppShell() {
         element={
           <PublicRoute>
             <Signup />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/verify-email"
+        element={
+          <PublicRoute>
+            <VerifyEmail />
           </PublicRoute>
         }
       />
@@ -270,7 +281,7 @@ function AppShell() {
       </div>
 
       <div className="app-shell-content">
-        {!isEmailPreviewRoute && <Navbar />}
+        {!isEmailPreviewRoute && !isAuthRoute && <Navbar />}
 
         {isSidebarRoute ? (
           <ModernCollapsibleSidebar>{pageRoutes}</ModernCollapsibleSidebar>
@@ -278,9 +289,9 @@ function AppShell() {
           pageRoutes
         )}
 
-        {!isEmailPreviewRoute && <Footer />}
-        {!isEmailPreviewRoute && <Chatbot />}
-        {!isEmailPreviewRoute && <FloatingDock />}
+        {!isEmailPreviewRoute && !isAuthRoute && <Footer />}
+        {!isEmailPreviewRoute && !isAuthRoute && <Chatbot />}
+        {!isEmailPreviewRoute && !isAuthRoute && <FloatingDock />}
 
         <Toaster
           position="top-right"

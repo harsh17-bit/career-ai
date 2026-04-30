@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
 import { generateOtp, hashOtp } from '../utils/otp.js';
+import jwt from 'jsonwebtoken';
 import {
   sendVerificationEmail,
   sendWelcomeEmail,
@@ -9,11 +10,15 @@ import {
 
 const OTP_EXPIRY_MINUTES = 10;
 const OTP_MAX_ATTEMPTS = 5;
+const RESET_TOKEN_EXPIRY_MINUTES = 10;
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 const buildAuthPayload = (user) => ({
   _id: user._id,
   name: user.name,
   email: user.email,
+  avatar: user.avatar,
   assessmentCompleted: user.assessmentCompleted,
   profile: user.profile,
   careerRecommendations: user.careerRecommendations,
@@ -54,6 +59,47 @@ const issuePasswordResetCode = async (user) => {
   });
 };
 
+const buildPasswordResetToken = (user) =>
+  jwt.sign(
+    {
+      userId: user._id,
+      email: user.email,
+      purpose: 'password-reset',
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: `${RESET_TOKEN_EXPIRY_MINUTES}m` }
+  );
+
+const verifyGoogleCredential = async (credential) => {
+  const response = await fetch(
+    `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(
+      credential
+    )}`
+  );
+
+  if (!response.ok) {
+    throw new Error('Invalid Google credential');
+  }
+
+  const payload = await response.json();
+
+  if (!payload?.email || !payload?.sub) {
+    throw new Error('Invalid Google credential payload');
+  }
+
+  if (GOOGLE_CLIENT_ID && payload.aud !== GOOGLE_CLIENT_ID) {
+    throw new Error('Google credential audience mismatch');
+  }
+
+  if (payload.email_verified !== 'true' && payload.email_verified !== true) {
+    throw new Error('Google email is not verified');
+  }
+
+  return payload;
+};
+
+const buildGoogleUserPayload = (user) => buildAuthPayload(user);
+
 export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -90,6 +136,49 @@ export const signup = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
+  }
+};
+
+export const googleAuth = async (req, res) => {
+  try {
+    const { credential } = req.body;
+    const payload = await verifyGoogleCredential(credential);
+
+    const email = payload.email.toLowerCase();
+    const googleId = payload.sub;
+    const displayName =
+      payload.name || payload.given_name || email.split('@')[0];
+    const avatar = payload.picture || '';
+
+    let user = await User.findOne({
+      $or: [{ googleId }, { email }],
+    });
+
+    if (!user) {
+      user = await User.create({
+        name: displayName,
+        email,
+        password: `${googleId}-${Date.now()}`,
+        googleId,
+        authProvider: 'google',
+        avatar,
+        isEmailVerified: true,
+      });
+    } else {
+      user.name = user.name || displayName;
+      user.email = email;
+      user.googleId = googleId;
+      user.authProvider = 'google';
+      user.avatar = avatar || user.avatar;
+      user.isEmailVerified = true;
+      await user.save();
+    }
+
+    return res.status(200).json(buildGoogleUserPayload(user));
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message || 'Google sign-in failed',
+    });
   }
 };
 
@@ -165,6 +254,55 @@ export const resendOtp = async (req, res) => {
       message: 'Verification code resent to your email address.',
       email: user.email,
       requiresVerification: true,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const verifyResetOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (
+      !user.passwordResetExpiresAt ||
+      user.passwordResetExpiresAt < new Date()
+    ) {
+      return res.status(400).json({
+        message: 'Reset code expired. Please request a new one.',
+        expired: true,
+      });
+    }
+
+    if (user.passwordResetAttempts >= OTP_MAX_ATTEMPTS) {
+      return res.status(429).json({
+        message: 'Too many invalid attempts. Please request a new code.',
+      });
+    }
+
+    if (hashOtp(otp) !== user.passwordResetOtpHash) {
+      user.passwordResetAttempts += 1;
+      await user.save();
+      return res.status(400).json({ message: 'Invalid reset code' });
+    }
+
+    const resetToken = buildPasswordResetToken(user);
+
+    user.passwordResetOtpHash = '';
+    user.passwordResetExpiresAt = null;
+    user.passwordResetAttempts = 0;
+    await user.save();
+
+    return res.status(200).json({
+      message: 'Reset code verified successfully.',
+      email: user.email,
+      resetToken,
+      expiresIn: RESET_TOKEN_EXPIRY_MINUTES * 60,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -252,7 +390,27 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const { email, otp, newPassword } = req.body;
+    const { resetToken, email, otp, newPassword } = req.body;
+
+    if (resetToken) {
+      const decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+
+      if (decoded.purpose !== 'password-reset') {
+        return res.status(400).json({ message: 'Invalid reset token' });
+      }
+
+      const user = await User.findById(decoded.userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      user.password = newPassword;
+      await user.save();
+
+      return res.status(200).json({
+        message: 'Password reset successful. You can now sign in.',
+      });
+    }
 
     const user = await User.findOne({ email });
     if (!user) {
