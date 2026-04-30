@@ -25,12 +25,37 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Security middleware
-// Configure helmet to allow popups for third-party identity windows (GSI)
-// and avoid blocking postMessage from the Google sign-in popup.
+// Configure helmet with a custom CSP that:
+//  - Allows blob: scripts (Vite code-splitting / web workers)
+//  - Allows Google Sign-In (accounts.google.com/gsi/client)
+//  - Allows popups for third-party identity windows (GSI)
 app.use(
   helmet({
     crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
     crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",   // Vite injects inline scripts in the HTML shell
+          "blob:",             // Vite code-splitting chunks & web workers
+          "https://accounts.google.com",
+        ],
+        scriptSrcElem: [
+          "'self'",
+          "'unsafe-inline'",
+          "blob:",
+          "https://accounts.google.com",
+        ],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "blob:", "https:"],
+        connectSrc: ["'self'", "https://accounts.google.com"],
+        frameSrc: ["https://accounts.google.com"],
+        workerSrc: ["'self'", "blob:"],
+      },
+    },
   })
 );
 
