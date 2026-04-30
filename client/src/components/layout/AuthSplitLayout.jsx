@@ -31,7 +31,7 @@ export default function AuthSplitLayout({
           className="auth-split-brand"
           textClassName="text-slate-900"
           badgeClassName="auth-split-brand-mark"
-          size={34}
+          size={40}
         />
 
         <div className="auth-split-left-content">

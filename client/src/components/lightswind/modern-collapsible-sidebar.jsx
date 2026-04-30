@@ -61,7 +61,7 @@ const ModernCollapsibleSidebar = ({ children }) => {
                 className="no-underline"
                 textClassName="font-bold text-base tracking-tight text-[var(--text-primary)]"
                 badgeClassName="h-9 w-9 rounded-xl"
-                size={36}
+                size={42}
               />
               <AnimatePresence>
                 {!isCollapsed && (

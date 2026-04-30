@@ -127,14 +127,14 @@ export default function Login() {
         />
 
         <div className="auth-login-row">
-          <label className="auth-remember">
+          {/* <label className="auth-remember">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
             <span>Remember for 30 days</span>
-          </label>
+          </label> */}
 
           <button
             type="button"

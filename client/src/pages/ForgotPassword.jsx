@@ -371,7 +371,7 @@ export default function ForgotPassword() {
               className="justify-center"
               textClassName="text-slate-900 text-lg"
               badgeClassName="h-11 w-11 rounded-[14px]"
-              size={44}
+              size={50}
             />
           </div>
 

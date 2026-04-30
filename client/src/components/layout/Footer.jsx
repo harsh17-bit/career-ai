@@ -57,7 +57,7 @@ export default function Footer() {
               className="footer-brand-link"
               textClassName="text-white"
               badgeClassName="h-11 w-11 rounded-[15px]"
-              size={44}
+              size={50}
             />
             <p className="footer-subtitle">
               Career guidance with a clean, focused, AI-first workflow. Discover

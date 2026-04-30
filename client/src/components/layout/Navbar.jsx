@@ -76,7 +76,7 @@ export default function Navbar() {
             className="site-header-brand"
             textClassName="site-header-name"
             badgeClassName="h-9 w-9 rounded-xl"
-            size={36}
+            size={42}
           />
 
           <nav className="site-header-nav" aria-label="Primary navigation">

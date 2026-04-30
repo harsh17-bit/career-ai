@@ -93,3 +93,20 @@ html.theme-light .from-purple-500.to-pink-500 *,
 html.theme-light .from-orange-500.to-red-500 * {
   color: #ffffff !important;
 }
+
+/* Ensure logo text is visible in light mode */
+html.theme-light .site-header-brand {
+  color: #1a1a1a;
+}
+
+html.theme-light .auth-split-brand {
+  color: #1a1a1a;
+}
+
+/* Adjust logo appearance in dark mode (invert dark text to light) */
+html.theme-dark .site-header-brand img,
+html.theme-dark .auth-split-brand img,
+html:not(.theme-light) .site-header-brand img,
+html:not(.theme-light) .auth-split-brand img {
+  filter: invert(1) hue-rotate(180deg);
+}
