@@ -63,17 +63,6 @@ export default function Footer() {
               Career guidance with a clean, focused, AI-first workflow. Discover
               your path, build your roadmap, and move with clarity.
             </p>
-
-            <div className="footer-pills">
-              <span className="footer-pill">
-                <FiZap />
-                Fast recommendations
-              </span>
-              <span className="footer-pill">
-                <FiShield />
-                Private by design
-              </span>
-            </div>
           </div>
 
           <div className="footer-links-grid">
@@ -136,10 +125,6 @@ export default function Footer() {
 
           <div className="footer-bottom">
             <p>© {new Date().getFullYear()} CareerAI. All rights reserved.</p>
-            <div className="footer-status">
-              <span>Service: high efficiency</span>
-              <span>AI optimized</span>
-            </div>
           </div>
         </div>
       </div>
