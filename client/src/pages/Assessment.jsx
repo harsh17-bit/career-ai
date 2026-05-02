@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import useAuthStore from '../store/authStore';
+import OptionGrid from '../components/ui/OptionGrid';
 import { careerAPI } from '../services/api';
 import {
   EDUCATION_LEVELS,
@@ -151,6 +152,29 @@ export default function Assessment() {
     }));
   };
 
+  const saveDraft = () => {
+    try {
+      window.localStorage.setItem(
+        ASSESSMENT_DRAFT_KEY,
+        JSON.stringify({ form, step })
+      );
+      toast.success('Draft saved');
+    } catch (e) {
+      toast.error('Failed to save draft');
+    }
+  };
+
+  const clearDraft = () => {
+    try {
+      window.localStorage.removeItem(ASSESSMENT_DRAFT_KEY);
+      setForm(buildInitialForm());
+      setStep(0);
+      toast.success('Draft cleared');
+    } catch (e) {
+      toast.error('Failed to clear draft');
+    }
+  };
+
   const canProceed = () => {
     switch (step) {
       case 0:
@@ -201,6 +225,7 @@ export default function Assessment() {
   };
 
   const [direction, setDirection] = useState(0);
+  const cardRef = useRef(null);
 
   const goNext = () => {
     if (step < 4) {
@@ -215,6 +240,38 @@ export default function Assessment() {
       setStep(step - 1);
     }
   };
+
+  // Focus management: focus first interactive element when step changes
+  useEffect(() => {
+    const root = cardRef.current;
+    const focusable = root?.querySelector(
+      'button:not([disabled]), textarea, input, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable) {
+      focusable.focus();
+    }
+  }, [step]);
+
+  // Keyboard navigation: Arrow keys to navigate steps, Ctrl/Cmd+S to save draft
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') {
+        if (canProceed()) goNext();
+      } else if (e.key === 'ArrowLeft') {
+        goBack();
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        saveDraft();
+      } else if (e.key === 'Home') {
+        setStep(0);
+      } else if (e.key === 'End') {
+        setStep(4);
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [step, form]);
 
   const OptionGrid = ({ options, selected, onSelect, multi = false }) => (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
@@ -263,9 +320,27 @@ export default function Assessment() {
             animate={{ opacity: 1 }}
             className="text-right mb-4 sm:mb-6"
           >
-            <span className="text-sm font-mono text-white/30">
-              {String(step + 1).padStart(2, '0')} / 05
-            </span>
+            <div className="flex items-center justify-end gap-3">
+              <span className="text-sm font-mono text-white/30">
+                {String(step + 1).padStart(2, '0')} / 05
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={saveDraft}
+                  className="text-xs text-white/40 hover:text-white/60 px-2 py-1 rounded-md"
+                >
+                  Save Draft
+                </button>
+                <button
+                  type="button"
+                  onClick={clearDraft}
+                  className="text-xs text-red-400 hover:text-red-300 px-2 py-1 rounded-md"
+                >
+                  Clear Draft
+                </button>
+              </div>
+            </div>
           </motion.div>
 
           {/* Step content */}
@@ -279,7 +354,11 @@ export default function Assessment() {
               exit="exit"
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-12 border border-white/[0.08]">
+              <div
+                ref={cardRef}
+                className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-12 border border-white/[0.08]"
+                tabIndex={-1}
+              >
                 <div className="flex items-center gap-3 mb-2">
                   {(() => {
                     const Icon = steps[step].icon;

@@ -13,3 +13,65 @@
 .assessment-page textarea {
   font-size: 0.95rem;
 }
+
+/* Modern glass card and progress visuals */
+.glass-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+}
+
+.gradient-bg {
+  background: linear-gradient(
+    90deg,
+    rgba(59, 130, 246, 0.9),
+    rgba(139, 92, 246, 0.9)
+  );
+}
+
+.gradient-mesh {
+  background-image:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(34, 197, 94, 0.06),
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(59, 130, 246, 0.05),
+      transparent 24%
+    );
+  mix-blend-mode: overlay;
+}
+
+.assessment-page .glass-card button:focus,
+.assessment-page .glass-card textarea:focus,
+.assessment-page .glass-card input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.6);
+}
+
+/* Option button tweaks for accessible contrast and hover */
+.assessment-page .grid button {
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease;
+}
+.assessment-page .grid button:focus-visible {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .glass-card {
+    padding: 1.25rem;
+  }
+  .assessment-page .text-2xl {
+    font-size: 1.25rem;
+  }
+}
