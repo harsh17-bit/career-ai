@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   FiArrowRight,
   FiArrowLeft,
@@ -12,15 +12,9 @@ import {
 } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import useAuthStore from '../store/authStore';
-import OptionGrid from '../components/ui/OptionGrid';
+import StepTimeline from '../components/AssessmentLayout/StepTimeline';
+import StepContent from '../components/AssessmentLayout/StepContent';
 import { careerAPI } from '../services/api';
-import {
-  EDUCATION_LEVELS,
-  STREAMS,
-  SUBJECTS,
-  INTERESTS,
-  SKILLS,
-} from '../utils/constants';
 import toast from 'react-hot-toast';
 
 const steps = [
@@ -218,12 +212,6 @@ export default function Assessment() {
     }
   };
 
-  const slideVariants = {
-    enter: (direction) => ({ x: direction > 0 ? 300 : -300, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (direction) => ({ x: direction < 0 ? 300 : -300, opacity: 0 }),
-  };
-
   const [direction, setDirection] = useState(0);
   const cardRef = useRef(null);
 
@@ -273,33 +261,8 @@ export default function Assessment() {
     return () => window.removeEventListener('keydown', onKey);
   }, [step, form]);
 
-  const OptionGrid = ({ options, selected, onSelect, multi = false }) => (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
-      {options.map((option) => {
-        const isSelected = multi
-          ? selected.includes(option)
-          : selected === option;
-        return (
-          <motion.button
-            key={option}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => onSelect(option)}
-            className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium text-left transition-all duration-300 border ${
-              isSelected
-                ? 'bg-apple-blue/20 border-apple-blue/50 text-apple-blue'
-                : 'bg-white/[0.03] border-white/[0.08] text-white/60 hover:bg-white/[0.06] hover:border-white/[0.15]'
-            }`}
-          >
-            {option}
-          </motion.button>
-        );
-      })}
-    </div>
-  );
-
   return (
-    <div className="assessment-page min-h-screen flex flex-col pt-16 sm:pt-20 relative">
+    <div className="assessment-page min-h-screen flex flex-col relative">
       <div className="assessment-bg absolute inset-0 gradient-mesh opacity-50" />
 
       {/* Progress bar */}
@@ -311,16 +274,45 @@ export default function Assessment() {
         />
       </div>
 
-      <div className="flex-1 flex items-center justify-center px-3 sm:px-6 relative z-10">
-        <div className="w-full max-w-2xl">
-          {/* Step counter */}
-          <motion.div
-            key={step}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-right mb-4 sm:mb-6"
-          >
-            <div className="flex items-center justify-end gap-3">
+      {/* Main container: side-by-side on desktop, stacked on mobile */}
+      <div className="flex-1 flex flex-col lg:flex-row relative z-10 pt-16 sm:pt-20">
+        {/* Left Sidebar: Timeline - hidden on mobile/tablet, visible on lg+ */}
+        <div className="hidden lg:flex lg:w-1/3 bg-white/[0.02] backdrop-blur-sm">
+          <StepTimeline
+            steps={steps}
+            currentStep={step}
+            onStepSelect={setStep}
+            disabled={false}
+          />
+        </div>
+
+        {/* Right Content: Main assessment content */}
+        <div className="flex-1 flex flex-col items-center justify-center px-3 sm:px-6 md:px-8 py-8 lg:py-6">
+          <div className="w-full max-w-2xl">
+            {/* Mobile timeline toggle - visible on mobile/tablet only */}
+            <div className="lg:hidden mb-6 sm:mb-8">
+              <details className="group">
+                <summary className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/[0.08] cursor-pointer hover:bg-white/[0.04] transition">
+                  <span className="text-sm font-semibold text-white">
+                    Step {step + 1} of 5: {steps[step].title}
+                  </span>
+                  <span className="transform group-open:rotate-180 transition">
+                    ▼
+                  </span>
+                </summary>
+                <div className="mt-2 bg-white/[0.01] rounded-lg border border-white/[0.05] max-h-64 overflow-y-auto">
+                  <StepTimeline
+                    steps={steps}
+                    currentStep={step}
+                    onStepSelect={setStep}
+                    disabled={false}
+                  />
+                </div>
+              </details>
+            </div>
+
+            {/* Draft controls */}
+            <div className="flex items-center justify-between mb-4 sm:mb-6 px-2">
               <span className="text-sm font-mono text-white/30">
                 {String(step + 1).padStart(2, '0')} / 05
               </span>
@@ -328,191 +320,58 @@ export default function Assessment() {
                 <button
                   type="button"
                   onClick={saveDraft}
-                  className="text-xs text-white/40 hover:text-white/60 px-2 py-1 rounded-md"
+                  className="text-xs text-white/40 hover:text-white/60 px-2 py-1 rounded-md transition"
                 >
                   Save Draft
                 </button>
                 <button
                   type="button"
                   onClick={clearDraft}
-                  className="text-xs text-red-400 hover:text-red-300 px-2 py-1 rounded-md"
+                  className="text-xs text-red-400 hover:text-red-300 px-2 py-1 rounded-md transition"
                 >
                   Clear Draft
                 </button>
               </div>
             </div>
-          </motion.div>
 
-          {/* Step content */}
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={step}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            {/* Step content card */}
+            <div
+              ref={cardRef}
+              className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-white/[0.08]"
+              tabIndex={-1}
             >
-              <div
-                ref={cardRef}
-                className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-12 border border-white/[0.08]"
-                tabIndex={-1}
+              <StepContent
+                currentStep={step}
+                steps={steps}
+                form={form}
+                direction={direction}
+                onFormChange={setForm}
+                toggleArray={toggleArray}
+              />
+            </div>
+
+            {/* Navigation buttons */}
+            <div className="flex items-center justify-between mt-5 sm:mt-8 gap-3">
+              <Button
+                variant="ghost"
+                onClick={goBack}
+                disabled={step === 0}
+                className={step === 0 ? 'invisible' : ''}
               >
-                <div className="flex items-center gap-3 mb-2">
-                  {(() => {
-                    const Icon = steps[step].icon;
-                    return <Icon className="w-6 h-6 text-apple-blue" />;
-                  })()}
-                  <span className="text-sm font-semibold text-apple-blue uppercase tracking-wider">
-                    Step {step + 1}
-                  </span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight">
-                  {steps[step].title}
-                </h2>
-                <p className="text-sm sm:text-base text-white/40 mb-5 sm:mb-8">
-                  {steps[step].subtitle}
-                </p>
+                <FiArrowLeft className="w-5 h-5" />
+                Back
+              </Button>
 
-                {/* Step 0: Education Level */}
-                {step === 0 && (
-                  <OptionGrid
-                    options={EDUCATION_LEVELS}
-                    selected={form.educationLevel}
-                    onSelect={(v) => setForm({ ...form, educationLevel: v })}
-                  />
-                )}
-
-                {/* Step 1: Stream */}
-                {step === 1 && (
-                  <OptionGrid
-                    options={STREAMS}
-                    selected={form.stream}
-                    onSelect={(v) => setForm({ ...form, stream: v })}
-                  />
-                )}
-
-                {/* Step 2: Subjects & Interests */}
-                {step === 2 && (
-                  <div className="space-y-6 sm:space-y-8">
-                    <div>
-                      <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
-                        Subjects{' '}
-                        <span className="text-white/30 text-sm font-normal">
-                          (min 2)
-                        </span>
-                      </h3>
-                      <OptionGrid
-                        options={SUBJECTS}
-                        selected={form.subjects}
-                        onSelect={(v) => toggleArray('subjects', v)}
-                        multi
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
-                        Interests{' '}
-                        <span className="text-white/30 text-sm font-normal">
-                          (min 2)
-                        </span>
-                      </h3>
-                      <OptionGrid
-                        options={INTERESTS}
-                        selected={form.interests}
-                        onSelect={(v) => toggleArray('interests', v)}
-                        multi
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Step 3: Skills */}
-                {step === 3 && (
-                  <div>
-                    <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
-                      Your Skills{' '}
-                      <span className="text-white/30 text-sm font-normal">
-                        (min 2)
-                      </span>
-                    </h3>
-                    <OptionGrid
-                      options={SKILLS}
-                      selected={form.skills}
-                      onSelect={(v) => toggleArray('skills', v)}
-                      multi
-                    />
-                  </div>
-                )}
-
-                {/* Step 4: Goals & Marks */}
-                {step === 4 && (
-                  <div className="space-y-4 sm:space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-white/50 mb-2">
-                        Academic Score (%)
-                      </label>
-                      <div className="flex items-center gap-4">
-                        <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
-                          <motion.div
-                            className="h-full gradient-bg"
-                            animate={{ width: `${form.marks}%` }}
-                            transition={{ duration: 0.35 }}
-                          />
-                        </div>
-                        <span className="text-xl sm:text-2xl font-bold text-white w-14 sm:w-16 text-right">
-                          {form.marks}%
-                        </span>
-                      </div>
-                      <p className="text-xs text-white/35 mt-2">
-                        Auto-calculated from your selected education, stream,
-                        subjects, interests, skills, and career goals.
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-white/50 mb-2">
-                        Career Goals
-                      </label>
-                      <textarea
-                        value={form.goals}
-                        onChange={(e) =>
-                          setForm({ ...form, goals: e.target.value })
-                        }
-                        placeholder="Describe your dream career and what you want to achieve..."
-                        rows={4}
-                        className="input-apple resize-none"
-                      />
-                      <p className="text-xs text-white/30 mt-1">
-                        {form.goals.length}/200 characters (min 10)
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Navigation */}
-          <div className="flex items-center justify-between mt-5 sm:mt-8">
-            <Button
-              variant="ghost"
-              onClick={goBack}
-              disabled={step === 0}
-              className={step === 0 ? 'invisible' : ''}
-            >
-              <FiArrowLeft className="w-5 h-5" />
-              Back
-            </Button>
-
-            <Button
-              variant="primary"
-              onClick={goNext}
-              disabled={!canProceed()}
-              loading={loading}
-            >
-              {step === 4 ? 'Get Recommendations' : 'Continue'}
-              <FiArrowRight className="w-5 h-5" />
-            </Button>
+              <Button
+                variant="primary"
+                onClick={goNext}
+                disabled={!canProceed()}
+                loading={loading}
+              >
+                {step === 4 ? 'Get Recommendations' : 'Continue'}
+                <FiArrowRight className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

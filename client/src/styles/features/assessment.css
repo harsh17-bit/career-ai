@@ -1,5 +1,4 @@
-/* Assessment feature styles
-   Edit this file for multi-step assessment page UI. */
+/* Assessment feature styles - Multi-layout responsive design */
 
 .assessment-page {
   --assessment-mesh-opacity: 0.5;
@@ -14,7 +13,7 @@
   font-size: 0.95rem;
 }
 
-/* Modern glass card and progress visuals */
+/* ===== Modern Glass & Gradient Styles ===== */
 .glass-card {
   background: linear-gradient(
     180deg,
@@ -49,6 +48,7 @@
   mix-blend-mode: overlay;
 }
 
+/* ===== Focus & Accessibility ===== */
 .assessment-page .glass-card button:focus,
 .assessment-page .glass-card textarea:focus,
 .assessment-page .glass-card input:focus {
@@ -57,21 +57,159 @@
   border-color: rgba(99, 102, 241, 0.6);
 }
 
-/* Option button tweaks for accessible contrast and hover */
 .assessment-page .grid button {
   transition:
     transform 0.16s ease,
     box-shadow 0.16s ease;
 }
+
 .assessment-page .grid button:focus-visible {
   transform: translateY(-2px);
 }
 
-@media (max-width: 640px) {
-  .glass-card {
+/* ===== Timeline Component Styles ===== */
+.assessment-timeline {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-y: auto;
+  min-height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.assessment-timeline::-webkit-scrollbar {
+  width: 6px;
+}
+
+.assessment-timeline::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.assessment-timeline::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.assessment-timeline::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.assessment-timeline button {
+  transition: all 0.2s ease;
+}
+
+.assessment-timeline button:hover {
+  transform: translateX(4px);
+}
+
+.assessment-timeline .w-5.h-5 {
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+/* ===== Mobile Collapsible Timeline ===== */
+details > summary {
+  user-select: none;
+  list-style: none;
+  cursor: pointer;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] > summary span:last-child {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+  .assessment-timeline {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .assessment-page .glass-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .assessment-page .glass-card {
     padding: 1.25rem;
   }
-  .assessment-page .text-2xl {
+
+  .assessment-page .text-2xl,
+  .assessment-page .text-3xl {
     font-size: 1.25rem;
   }
+
+  .assessment-timeline {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .assessment-page .glass-card {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .assessment-timeline {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .assessment-page .text-sm {
+    font-size: 0.8125rem;
+  }
+
+  .assessment-page .gap-3 {
+    gap: 0.5rem;
+  }
+}
+
+/* ===== Animation & Performance ===== */
+.assessment-page motion {
+  will-change: transform, opacity;
+}
+
+.assessment-page details {
+  transition: all 0.2s ease;
+}
+
+.assessment-page details[open] {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.01)
+  );
+}
+
+/* ===== Grid Layout ===== */
+.assessment-page .grid {
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .assessment-page .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+/* ===== Text Truncation for Timeline ===== */
+.assessment-timeline h3,
+.assessment-timeline p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+/* ===== Keyboard Navigation Indicators ===== */
+.assessment-page *:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 2px;
 }
