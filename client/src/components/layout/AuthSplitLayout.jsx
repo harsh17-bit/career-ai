@@ -39,7 +39,7 @@ export default function AuthSplitLayout({
         </div>
       </section>
 
-      <aside className="auth-split-right" aria-hidden="true">
+      <aside className="auth-split-right" aria-hidden="true" inert="">
         <div className="auth-split-right-glow auth-split-right-glow-top" />
         <div className="auth-split-right-glow auth-split-right-glow-bottom" />
 
