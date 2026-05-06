@@ -102,13 +102,13 @@ export default function Navbar() {
               {isDark ? <FiSun /> : <FiMoon />}
             </button>
 
-            <button
+            {/* <button
               type="button"
               className="site-header-icon-btn hidden md:inline-flex"
               aria-label="Notifications"
             >
               <FiBell />
-            </button>
+            </button> */}
 
             {isAuthenticated ? (
               <>
