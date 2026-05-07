@@ -20,6 +20,7 @@ import Badge from '../components/ui/Badge';
 import useAuthStore from '../store/authStore';
 import { authAPI } from '../services/api';
 import '../styles/features/dashboard.css';
+import AssessmentSummary from '../components/sections/AssessmentSummary';
 
 const difficultyColors = {
   Easy: 'green',
@@ -205,6 +206,9 @@ export default function Dashboard() {
             </article>
           ))}
         </section>
+
+        {/* Assessment Summary */}
+        <AssessmentSummary />
 
         {/* Skill Gap */}
         <div className="dashboard-skill-gap">

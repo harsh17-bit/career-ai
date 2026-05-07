@@ -618,3 +618,85 @@
     font-size: 1rem;
   }
 }
+
+/* Assessment summary styles */
+.assessment-summary {
+  margin-bottom: 1rem;
+}
+.summary-card {
+  background: var(--dashboard-card-bg);
+  border: 1px solid var(--dashboard-card-border);
+  border-radius: 0.85rem;
+  padding: 1rem;
+  backdrop-filter: blur(12px);
+}
+.summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.summary-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  color: var(--dashboard-text-primary);
+}
+.summary-title svg {
+  color: var(--dashboard-accent);
+}
+.summary-body {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.score-block {
+  flex: 0 0 220px;
+}
+.score-label {
+  font-size: 0.78rem;
+  color: var(--dashboard-text-muted);
+  margin-bottom: 0.35rem;
+}
+.score-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--dashboard-text-primary);
+  margin-bottom: 0.5rem;
+}
+.score-meter {
+  height: 10px;
+  background: var(--surface-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+}
+.score-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--dashboard-accent), #06b6d4);
+}
+.weak-skills {
+  flex: 1 1 320px;
+}
+.weak-label {
+  font-size: 0.82rem;
+  color: var(--dashboard-text-muted);
+  margin-bottom: 0.4rem;
+}
+.weak-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.no-gaps {
+  color: var(--dashboard-success);
+  font-size: 0.9rem;
+}
+.summary-footer {
+  margin-top: 0.9rem;
+  display: flex;
+  justify-content: flex-end;
+}

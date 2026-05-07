@@ -8,6 +8,7 @@ import {
   Map,
   Search,
   Settings,
+  X,
 } from 'lucide-react';
 import { FiSun, FiMoon } from 'react-icons/fi';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -18,6 +19,7 @@ import BrandLogo from '../ui/BrandLogo';
 
 const ModernCollapsibleSidebar = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [query, setQuery] = useState('');
   const { user, logout } = useAuthStore();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -28,6 +30,13 @@ const ModernCollapsibleSidebar = ({ children }) => {
     { icon: Map, label: 'Roadmap', href: '/roadmap' },
     { icon: Settings, label: 'Profile', href: '/profile' },
   ];
+
+  const filtered =
+    query.trim().length > 0
+      ? menuItems.filter((m) =>
+          m.label.toLowerCase().includes(query.trim().toLowerCase())
+        )
+      : menuItems;
 
   const activeItem =
     menuItems.find((item) => location.pathname.startsWith(item.href))?.label ||
@@ -87,9 +96,24 @@ const ModernCollapsibleSidebar = ({ children }) => {
                 <input
                   type="text"
                   placeholder="Search..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && filtered.length) {
+                      navigate(filtered[0].href);
+                    }
+                  }}
                   className="w-full h-9 pl-9 pr-10 text-sm rounded-xl bg-[var(--surface-soft)] border border-[var(--border-soft)] focus:outline-none focus:border-[var(--apple-blue)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-colors duration-300"
                 />
-                {/* <div className="absolute right-2 px-1.5 rounded border border-[var(--border-soft)] bg-[var(--bg-elevated)] text-[10px] font-medium text-[var(--text-muted)] flex items-center justify-center h-5 transition-colors">⌘K</div> */}
+                {query && (
+                  <button
+                    onClick={() => setQuery('')}
+                    className="absolute right-3 text-[var(--text-muted)] hover:text-[var(--text-primary)] z-10 p-1"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             ) : (
               <button className="w-10 h-10 mx-auto rounded-xl bg-[var(--surface-soft)] hover:bg-[var(--surface-soft-hover)] flex items-center justify-center transition-colors">
@@ -100,7 +124,7 @@ const ModernCollapsibleSidebar = ({ children }) => {
 
           <div className="flex-1 px-3 overflow-y-auto no-scrollbar">
             <div className="space-y-1 py-2">
-              {menuItems.map((item, index) => (
+              {filtered.map((item, index) => (
                 <button
                   key={index}
                   onClick={() => navigate(item.href)}
