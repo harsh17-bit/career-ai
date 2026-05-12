@@ -1,0 +1,340 @@
+.site-header {
+  position: fixed;
+  /* position: relative; */
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  padding: 10px 0;
+  transition: padding 180ms ease;
+}
+
+.site-header {
+  height: var(--header-height);
+}
+
+.site-header.is-scrolled {
+  padding: 8px 0;
+}
+
+.site-header-wrap {
+  padding: 0 12px;
+}
+
+.site-header-shell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 76px;
+  border: 1px solid rgba(165, 179, 201, 0.2);
+  border-radius: 22px;
+  padding: 0 16px;
+  background: rgba(3, 7, 18, 0.84);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.site-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #f8fafc;
+}
+
+.site-header-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.site-header-name {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.site-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-header-link {
+  border: 0;
+  background: transparent;
+  color: rgba(226, 232, 240, 0.62);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.13em;
+  font-weight: 600;
+  padding: 10px 8px;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.site-header-link:hover {
+  color: #f8fafc;
+}
+
+.site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.site-header-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 160px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.65);
+  color: rgba(226, 232, 240, 0.7);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.site-header-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.site-header-icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  /* border: 1px solid rgba(148, 163, 184, 0.2); */
+  background: transparent;
+  color: rgba(226, 232, 240, 0.72);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.site-header-icon-btn:hover {
+  color: #f8fafc;
+  border-color: rgba(226, 232, 240, 0.34);
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.site-header-icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.site-header-deploy {
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: #f8fafc;
+  color: #111827;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.site-header-deploy svg {
+  width: 16px;
+  height: 16px;
+}
+
+.site-header-mobile-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 12px;
+  color: #f8fafc;
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-header-mobile-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+html.theme-light .site-header-shell {
+  border-color: rgba(148, 163, 184, 0.28);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+}
+
+html.theme-light .site-header-brand {
+  color: #0f172a;
+}
+
+html.theme-light .site-header-mark {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+html.theme-light .site-header-link {
+  color: rgba(71, 85, 105, 0.82);
+}
+
+html.theme-light .site-header-link:hover {
+  color: #0f172a;
+}
+
+html.theme-light .site-header-search {
+  border-color: rgba(148, 163, 184, 0.35);
+  background: rgba(241, 245, 249, 0.95);
+  color: rgba(71, 85, 105, 0.92);
+}
+
+html.theme-light .site-header-icon-btn {
+  border-color: rgba(148, 163, 184, 0.35);
+  color: rgba(51, 65, 85, 0.86);
+}
+
+html.theme-light .site-header-icon-btn:hover {
+  color: #0f172a;
+  border-color: rgba(100, 116, 139, 0.55);
+  background: rgba(241, 245, 249, 0.98);
+}
+
+html.theme-light .site-header-mobile-toggle {
+  border-color: rgba(148, 163, 184, 0.42);
+  color: #0f172a;
+}
+
+@media (max-width: 1320px) {
+  .site-header-name {
+    font-size: 26px;
+  }
+
+  .site-header-shell {
+    gap: 12px;
+  }
+
+  .site-header-link {
+    letter-spacing: 0.09em;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .site-header-nav {
+    display: none;
+  }
+
+  .site-header-mobile-toggle {
+    display: inline-flex;
+  }
+
+  .site-header-mobile-panel {
+    display: block;
+  }
+}
+
+@media (max-width: 860px) {
+  .site-header {
+    padding: 8px 0;
+  }
+
+  .site-header-wrap {
+    padding: 0 8px;
+  }
+
+  .site-header-shell {
+    min-height: 64px;
+    border-radius: 16px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .site-header-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+
+  .site-header-name {
+    font-size: 20px;
+  }
+
+  .site-header-actions {
+    margin-left: auto;
+    gap: 4px;
+  }
+
+  .site-header-mobile-toggle {
+    margin-left: 2px;
+  }
+
+  .site-header-actions .site-header-icon-btn:not(:first-child) {
+    display: none;
+  }
+
+  .site-header-deploy {
+    height: 38px;
+    border-radius: 12px;
+    padding: 0 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-header-actions {
+    gap: 2px;
+  }
+
+  .site-header-mobile-toggle {
+    margin-left: 0;
+  }
+
+  .site-header-deploy {
+    display: none;
+  }
+
+  .site-header-shell {
+    min-height: 56px;
+    border-radius: 14px;
+    padding: 0 8px;
+  }
+
+  .site-header-name {
+    font-size: 16px;
+    letter-spacing: 0.01em;
+  }
+
+  .site-header-mark,
+  .site-header-icon-btn,
+  .site-header-mobile-toggle {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  .site-header-mobile-panel {
+    border-radius: 14px;
+    padding: 8px;
+  }
+}

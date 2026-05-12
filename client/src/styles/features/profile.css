@@ -1,0 +1,14 @@
+/* Profile feature styles
+   Edit this file to style account/profile sections only. */
+
+.profile-page {
+  --profile-mesh-opacity: 0.2;
+}
+
+.profile-page .profile-bg {
+  opacity: var(--profile-mesh-opacity);
+}
+
+.profile-page .glass-card {
+  backdrop-filter: blur(44px);
+}
