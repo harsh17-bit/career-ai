@@ -290,7 +290,8 @@ function AppShell() {
         )}
 
         {!isEmailPreviewRoute && !isAuthRoute && <Footer />}
-        {!isEmailPreviewRoute && !isAuthRoute && <Chatbot />}
+        {/* Show chatbot on all routes except the email preview (keeps help available during auth flows) */}
+        {!isEmailPreviewRoute && <Chatbot />}
         {!isEmailPreviewRoute && !isAuthRoute && <FloatingDock />}
 
         <Toaster

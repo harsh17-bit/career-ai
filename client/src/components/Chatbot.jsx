@@ -8,6 +8,7 @@ import {
   FiUser,
   FiStar,
 } from 'react-icons/fi';
+import RoadmapCard from './ui/RoadmapCard';
 import { chatAPI } from '../services/api';
 import useAuthStore from '../store/authStore';
 import toast from 'react-hot-toast';

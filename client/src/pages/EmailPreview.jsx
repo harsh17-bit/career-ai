@@ -1,17 +1,52 @@
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiExternalLink, FiMail } from 'react-icons/fi';
+import {
+  FiArrowLeft,
+  FiCheckCircle,
+  FiExternalLink,
+  FiMail,
+} from 'react-icons/fi';
 
-const previewData = {
-  label: 'Password reset',
-  title: 'Reset your CareerAI password',
-  intro:
-    'Use the code below to securely update your password. Once changed, you will be redirected back to login.',
-  name: 'Harsh Rathod',
-  otp: '456396',
-  note: 'If you are worried about your account, complete the reset immediately and choose a strong new password.',
+const emailTheme = {
+  bg: '#eef2f7',
+  panel: '#ffffff',
+  panelSoft: '#f7fafc',
+  border: 'rgba(15, 23, 42, 0.09)',
+  text: '#0f172a',
+  muted: '#475569',
+  accent: '#3151c6',
+  accent2: '#0f766e',
+  note: '#64748b',
 };
 
-const buildEmailHtml = () => `<!doctype html>
+const escapeHtml = (value = '') =>
+  String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const ctaButton = (href, text) => `
+  <div class="cta-wrap">
+    <!--[if mso]>
+    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(
+      href
+    )}" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="50%" stroke="f" fillcolor="#1d4ed8">
+      <w:anchorlock />
+      <center style="color:#ffffff;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;">${escapeHtml(
+        text
+      )}</center>
+    </v:roundrect>
+    <![endif]-->
+    <!--[if !mso]><!-- -->
+    <a class="button" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+      text
+    )}</a>
+    <!--<![endif]-->
+  </div>`;
+
+const shell = ({ label, title, intro, content, note }) => `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -22,9 +57,10 @@ const buildEmailHtml = () => `<!doctype html>
     html, body { margin: 0; padding: 0; }
     body {
       font-family: Inter, Arial, sans-serif;
-      color: #0f172a;
+      color: ${emailTheme.text};
       padding: 32px 16px;
-      background: #f8fafc;
+      background-color: ${emailTheme.bg};
+      background-image: radial-gradient(circle at top, rgba(79, 70, 229, 0.08), transparent 32%), radial-gradient(circle at 85% 10%, rgba(20, 184, 166, 0.10), transparent 24%);
     }
     .wrap { max-width: 680px; margin: 0 auto; }
     .topbar {
@@ -34,33 +70,29 @@ const buildEmailHtml = () => `<!doctype html>
       gap: 12px;
       margin: 0 6px 18px;
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; }
     .logo {
       width: 44px;
       height: 44px;
       border-radius: 14px;
-      background: #eaf2ff;
-      border: 1px solid rgba(79, 110, 247, 0.12);
+      background: linear-gradient(135deg, #1d4ed8, #14b8a6);
+      border: 1px solid rgba(29, 78, 216, 0.12);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
       font-weight: 900;
-      color: #4f6ef7;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      color: #ffffff;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
     }
     .brand-name {
       font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1;
-      color: #0f172a;
+      color: ${emailTheme.text};
     }
-    .brand-name span { color: #22d3ee; }
+    .brand-name span { color: ${emailTheme.accent2}; }
     .subtle {
       margin-top: 4px;
       font-size: 12px;
@@ -76,12 +108,12 @@ const buildEmailHtml = () => `<!doctype html>
     }
     .card {
       overflow: hidden;
-      border: 1px solid rgba(15, 23, 42, 0.08);
+      border: 1px solid ${emailTheme.border};
       border-radius: 30px;
-      background: #ffffff;
-      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+      background: ${emailTheme.panel};
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
     }
-    .accent { height: 6px; background: linear-gradient(90deg, rgba(79, 110, 247, 0.95) 0%, rgba(34, 211, 238, 0.75) 55%, rgba(168, 85, 247, 0.85) 100%); }
+    .accent { height: 7px; background: linear-gradient(90deg, #3151c6 0%, #14b8a6 52%, #f59e0b 100%); }
     .body { padding: 34px 30px 30px; }
     .pill {
       display: inline-flex;
@@ -101,73 +133,52 @@ const buildEmailHtml = () => `<!doctype html>
       width: 8px;
       height: 8px;
       border-radius: 999px;
-      background: #22d3ee;
+      background: ${emailTheme.accent2};
       display: inline-block;
     }
     h1 {
       margin: 18px 0 12px;
-      font-size: 34px;
+      font-size: 35px;
       line-height: 1.1;
       letter-spacing: -0.05em;
-      color: #0f172a;
+      color: ${emailTheme.text};
     }
     .intro {
       margin: 0 0 24px;
       font-size: 16px;
       line-height: 1.8;
-      color: rgba(15, 23, 42, 0.7);
+      color: ${emailTheme.muted};
     }
     .content {
       border-radius: 24px;
       border: 1px solid rgba(15, 23, 42, 0.06);
-      background: #fbfdff;
+      background: linear-gradient(180deg, ${emailTheme.panelSoft} 0%, #ffffff 100%);
       padding: 24px;
     }
-    .codeCard {
-      margin: 18px auto 14px;
-      max-width: 220px;
-      padding: 16px 22px;
-      border-radius: 22px;
-      background: #ffffff;
-      border: 1px solid rgba(15, 23, 42, 0.10);
-      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
-      text-align: center;
-    }
-    .codeLabel {
-      font-size: 11px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(15, 23, 42, 0.48);
-      margin-bottom: 10px;
-    }
-    .codeValue {
-      font-size: 36px;
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: 10px;
-      color: #0f172a;
-    }
-    .hello {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.8;
-      color: rgba(15, 23, 42, 0.7);
-    }
-    .callout {
-      margin-top: 16px;
-      padding: 14px 16px;
+    .stack { display: grid; gap: 12px; }
+    .feature {
+      padding: 16px 18px;
       border-radius: 18px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
       background: #ffffff;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      color: #0f172a;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
       font-size: 14px;
       line-height: 1.7;
+      color: ${emailTheme.muted};
     }
-    .note {
-      margin: 18px 2px 0;
-      font-size: 12px;
-      line-height: 1.7;
-      color: rgba(15, 23, 42, 0.46);
+    .feature strong { color: ${emailTheme.text}; }
+    .cta-wrap { margin-top: 22px; text-align: center; }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+      border-radius: 999px;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 14px 22px;
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
     }
     .footer {
       padding: 18px 8px 0;
@@ -176,7 +187,12 @@ const buildEmailHtml = () => `<!doctype html>
       line-height: 1.7;
       color: rgba(15, 23, 42, 0.42);
     }
-    /* Mobile: 480px and below */
+    .note {
+      margin: 18px 2px 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: ${emailTheme.note};
+    }
     @media (max-width: 480px) {
       body { padding: 16px 10px; }
       .body { padding: 20px 14px 16px; }
@@ -187,8 +203,8 @@ const buildEmailHtml = () => `<!doctype html>
       .logo { width: 40px; height: 40px; font-size: 16px; }
       .brand-name { font-size: 16px; }
       .content { padding: 18px; border-radius: 16px; }
+      .feature { padding: 14px 15px; }
     }
-    /* Tablet: 480px to 768px */
     @media (max-width: 768px) {
       body { padding: 24px 12px; }
       .body { padding: 26px 22px 20px; }
@@ -206,7 +222,7 @@ const buildEmailHtml = () => `<!doctype html>
         <div class="logo">A</div>
         <div>
           <div class="brand-name">Career<span>AI</span></div>
-          <div class="subtle">${previewData.label}</div>
+          <div class="subtle">${escapeHtml(label)}</div>
         </div>
       </div>
       <div class="meta">Career guidance</div>
@@ -215,20 +231,15 @@ const buildEmailHtml = () => `<!doctype html>
     <div class="card">
       <div class="accent"></div>
       <div class="body">
-        <div class="pill"><span class="dot"></span>${previewData.label}</div>
-        <h1>${previewData.title}</h1>
-        <p class="intro">${previewData.intro}</p>
+        <div class="pill"><span class="dot"></span>${escapeHtml(label)}</div>
+        <h1>${escapeHtml(title)}</h1>
+        <p class="intro">${intro}</p>
 
         <div class="content">
-          <p class="hello">Hi ${previewData.name},</p>
-          <div class="codeCard">
-            <div class="codeLabel">Security code</div>
-            <div class="codeValue">${previewData.otp}</div>
-          </div>
-          <div class="callout">This reset code expires in <strong>10 minutes</strong>. If you did not request a password reset, you can ignore this email.</div>
+          ${content}
         </div>
 
-        <p class="note">${previewData.note}</p>
+        ${note ? `<p class="note">${note}</p>` : ''}
       </div>
     </div>
 
@@ -237,24 +248,157 @@ const buildEmailHtml = () => `<!doctype html>
 </body>
 </html>`;
 
+const codeBadge = (code) => `
+  <div style="margin:18px auto 14px;max-width:220px;padding:16px 22px;border-radius:22px;background:#ffffff;border:1px solid rgba(15,23,42,0.10);box-shadow:0 8px 22px rgba(15,23,42,0.05);text-align:center;">
+    <div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(15,23,42,0.48);margin-bottom:10px;">Security code</div>
+    <div style="font-size:36px;line-height:1;font-weight:900;letter-spacing:10px;color:${emailTheme.text};">${escapeHtml(code)}</div>
+  </div>`;
+
+const chip = (text) => `
+  <div style="padding:16px 18px;border-radius:18px;border:1px solid rgba(15,23,42,0.06);background:#ffffff;box-shadow:0 8px 20px rgba(15,23,42,0.03);font-size:14px;line-height:1.7;color:${emailTheme.muted};">
+    ${text}
+  </div>`;
+
+const buildWelcomeEmailHtml = () =>
+  shell({
+    label: 'Welcome to CareerAI',
+    title: 'Your career planning workspace is ready',
+    intro:
+      'Your account is verified. You can now move through assessment, roadmap planning, and personalized recommendations in one streamlined experience.',
+    content: `
+      <p style="margin:0;font-size:14px;line-height:1.8;color:${emailTheme.muted};">Hi Harsh Rathod,</p>
+      <div class="stack" style="margin-top:18px;">
+        <div class="feature"><strong>Assessment-first guidance.</strong> Get a clear snapshot of your strengths and the roles that fit your profile.</div>
+        <div class="feature"><strong>Premium roadmap tracking.</strong> Turn your next steps into a structured plan with milestones you can actually follow.</div>
+        <div class="feature"><strong>Always-available support.</strong> Revisit your dashboard anytime and reach out whenever you need help.</div>
+      </div>
+      ${ctaButton('https://career-ai-3btq.onrender.com/', 'Open your dashboard')}
+      <p style="margin:18px 0 0;font-size:14px;line-height:1.8;color:${emailTheme.muted};">If you ever need help getting started, reply to this email or visit <a href="https://careerai.com/support" style="color:${emailTheme.accent};text-decoration:none;font-weight:700;">our support page</a>.</p>`,
+    note: 'We are glad to have you here. Your next best move starts with a focused plan.',
+  });
+
+const buildResetEmailHtml = () =>
+  shell({
+    label: 'Password reset',
+    title: 'Reset your CareerAI password',
+    intro:
+      'Use the code below to securely update your password. Once changed, you will be redirected back to login.',
+    content: `
+      <p style="margin:0;font-size:14px;line-height:1.8;color:${emailTheme.muted};">Hi Harsh Rathod,</p>
+      <div style="margin:18px auto 14px;max-width:220px;padding:16px 22px;border-radius:22px;background:#ffffff;border:1px solid rgba(15,23,42,0.10);box-shadow:0 8px 22px rgba(15,23,42,0.05);text-align:center;">
+        <div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(15,23,42,0.48);margin-bottom:10px;">Security code</div>
+        <div style="font-size:36px;line-height:1;font-weight:900;letter-spacing:10px;color:${emailTheme.text};">456396</div>
+      </div>
+      <div style="margin-top:16px;padding:14px 16px;border-radius:18px;background:#ffffff;border:1px solid rgba(15, 23, 42, 0.08);color:${emailTheme.text};font-size:14px;line-height:1.7;">This reset code expires in <strong>10 minutes</strong>. If you did not request a password reset, you can ignore this email.</div>`,
+    note: 'If you are worried about your account, complete the reset immediately and choose a strong new password.',
+  });
+
+const buildVerificationEmailHtml = () =>
+  shell({
+    label: 'Email verification',
+    title: 'Confirm your CareerAI account',
+    intro:
+      'Use the security code below to verify your email and unlock your dashboard, roadmap, and AI recommendations.',
+    content: `
+      <p style="margin:0;font-size:14px;line-height:1.8;color:${emailTheme.muted};">Hi Harsh Rathod,</p>
+      ${codeBadge('481205')}
+      <p style="margin:0;font-size:14px;line-height:1.8;color:${emailTheme.muted};">This code expires in <strong style="color:${emailTheme.text};">10 minutes</strong>. If you did not request it, you can safely ignore this message.</p>`,
+    note: 'For your security, never share this code with anyone. CareerAI will never ask for it in chat or over social media.',
+  });
+
+const buildAssessmentEmailHtml = () =>
+  shell({
+    label: 'Assessment complete',
+    title: 'Your career map is ready',
+    intro:
+      'Your assessment is finished and your personalized recommendation set is ready for review.',
+    content: `
+      <p style="margin:0;font-size:14px;line-height:1.8;color:${emailTheme.muted};">Hi Harsh Rathod,</p>
+      <div class="stack" style="margin-top:18px;">
+        ${chip(`<strong style="color:${emailTheme.text};">Top match:</strong> Product Designer`)}
+        ${chip('Open your dashboard to export a PDF summary, review skill gaps, and continue your roadmap.')}
+      </div>`,
+    note: 'Your career recommendations are personalized based on the assessment you completed today.',
+  });
+
+const buildWeeklyCheckInEmailHtml = () =>
+  shell({
+    label: 'Weekly check-in',
+    title: 'Your weekly career pulse',
+    intro:
+      'A small reminder to keep your roadmap alive, your progress visible, and your next milestone within reach.',
+    content: `
+      <p style="margin:0;font-size:14px;line-height:1.8;color:${emailTheme.muted};">Hi Harsh Rathod,</p>
+      <div class="stack" style="margin-top:18px;">
+        ${chip(`<strong style="color:${emailTheme.text};">Focus area:</strong> Frontend development`)}
+        ${chip('Complete a milestone, review your skill gap, or export your progress as PDF.')}
+      </div>`,
+    note: 'You can adjust reminders and pace inside your roadmap as you progress.',
+  });
+
+const templates = [
+  {
+    id: 'verification',
+    label: 'Verification',
+    title: 'Email verification template',
+    description: 'A secure code-based verification email for new accounts.',
+    html: buildVerificationEmailHtml(),
+  },
+  {
+    id: 'welcome',
+    label: 'Welcome',
+    title: 'Premium welcome email',
+    description: 'A polished onboarding template for new verified users.',
+    html: buildWelcomeEmailHtml(),
+  },
+  {
+    id: 'reset',
+    label: 'Password reset',
+    title: 'Security reset email',
+    description: 'A secure code-based template for password recovery.',
+    html: buildResetEmailHtml(),
+  },
+  {
+    id: 'assessment',
+    label: 'Assessment',
+    title: 'Assessment complete email',
+    description: 'A polished results email for completed assessments.',
+    html: buildAssessmentEmailHtml(),
+  },
+  {
+    id: 'weekly',
+    label: 'Weekly check-in',
+    title: 'Weekly check-in email',
+    description: 'A recurring progress reminder for roadmap momentum.',
+    html: buildWeeklyCheckInEmailHtml(),
+  },
+];
+
 export default function EmailPreview() {
-  const emailHtml = buildEmailHtml();
+  const [activeTemplateId, setActiveTemplateId] = useState('welcome');
+
+  const activeTemplate =
+    templates.find((template) => template.id === activeTemplateId) ??
+    templates[0];
+
+  const emailHtml = useMemo(() => activeTemplate.html, [activeTemplate]);
 
   return (
-    <main className="min-h-screen px-4 sm:px-6 py-8 sm:py-10 bg-[radial-gradient(circle_at_top,_rgba(79,110,247,0.15),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(34,211,238,0.12),_transparent_24%),linear-gradient(180deg,_#f4f7fb_0%,_#ecf2f8_100%)] text-slate-900">
+    <main className="min-h-screen px-4 py-8 text-slate-900 sm:px-6 sm:py-10 bg-[radial-gradient(circle_at_top,_rgba(79,110,247,0.15),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(34,211,238,0.12),_transparent_24%),linear-gradient(180deg,_#f4f7fb_0%,_#ecf2f8_100%)]">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 shadow-sm">
               <FiMail className="h-3.5 w-3.5 text-cyan-500" />
-              Email preview
+              Mail section
             </div>
             <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
-              Password reset email template
+              Email template studio
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
-              This preview matches the password reset email you receive. It's
-              fully responsive and renders correctly across all email clients.
+              Switch between premium email templates, review the rendered
+              output, and keep the mail section consistent with the product
+              brand.
             </p>
           </div>
 
@@ -278,6 +422,48 @@ export default function EmailPreview() {
           </div>
         </div>
 
+        <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {templates.map((template) => {
+            const isActive = template.id === activeTemplateId;
+
+            return (
+              <button
+                key={template.id}
+                type="button"
+                onClick={() => setActiveTemplateId(template.id)}
+                className={`rounded-[1.75rem] border p-5 text-left shadow-[0_16px_45px_rgba(15,23,42,0.06)] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 ${
+                  isActive
+                    ? 'border-slate-900 bg-slate-900 text-white shadow-[0_18px_50px_rgba(15,23,42,0.15)]'
+                    : 'border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:shadow-[0_18px_50px_rgba(15,23,42,0.08)]'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div
+                      className={`text-xs font-semibold uppercase tracking-[0.22em] ${isActive ? 'text-cyan-300' : 'text-slate-500'}`}
+                    >
+                      {template.label}
+                    </div>
+                    <h2 className="mt-2 text-lg font-black tracking-tight">
+                      {template.title}
+                    </h2>
+                  </div>
+                  {isActive ? (
+                    <FiCheckCircle className="h-5 w-5 text-cyan-300" />
+                  ) : (
+                    <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                  )}
+                </div>
+                <p
+                  className={`mt-3 text-sm leading-6 ${isActive ? 'text-slate-200' : 'text-slate-600'}`}
+                >
+                  {template.description}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
           <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_24px_90px_rgba(15,23,42,0.12)]">
             <div className="border-b border-slate-200 bg-slate-50 px-4 py-3 sm:px-6">
@@ -286,7 +472,7 @@ export default function EmailPreview() {
                   Rendered email
                 </span>
                 <span className="hidden h-4 w-px bg-slate-300 sm:inline-block" />
-                <span>White background</span>
+                <span>{activeTemplate.label}</span>
                 <span className="hidden h-4 w-px bg-slate-300 sm:inline-block" />
                 <span>680px content width</span>
               </div>
@@ -302,19 +488,24 @@ export default function EmailPreview() {
           <aside className="space-y-4 rounded-[2rem] border border-slate-200 bg-white p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
             <div>
               <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">
-                What changed
+                Mail section notes
               </h2>
               <ul className="mt-3 space-y-3 text-sm leading-6 text-slate-600">
-                <li>Outer background is off-white and clean.</li>
-                <li>Logo is now a softer, simpler badge.</li>
-                <li>Preview matches the password reset email you received.</li>
+                <li>Premium shell matches the server-side email renderer.</li>
+                <li>
+                  Verification, welcome, reset, assessment, and weekly templates
+                  are all available here.
+                </li>
+                <li>
+                  Standalone export uses the exact HTML currently in view.
+                </li>
               </ul>
             </div>
 
             <div className="rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">
-              If you want, I can also make this preview support the other email
-              types like verification, welcome, reset, assessment complete, and
-              weekly check-in.
+              The mail section now covers the full lifecycle: first sign-in,
+              onboarding, account recovery, assessment results, and ongoing
+              progress nudges.
             </div>
           </aside>
         </div>

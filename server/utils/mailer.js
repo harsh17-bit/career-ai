@@ -1,10 +1,4 @@
 import nodemailer from 'nodemailer';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const createTransporter = () => {
   const user = process.env.EMAIL_USER || process.env.SMTP_USER;
@@ -33,16 +27,16 @@ const getFromAddress = () =>
   `CareerAI <${process.env.EMAIL_USER || process.env.SMTP_USER || 'no-reply@careerai.local'}>`;
 
 const theme = {
-  bg: '#f8fafc',
+  bg: '#eef2f7',
   panel: '#ffffff',
-  panelSoft: '#fbfdff',
-  border: 'rgba(15, 23, 42, 0.08)',
+  panelSoft: '#f7fafc',
+  border: 'rgba(15, 23, 42, 0.09)',
   text: '#0f172a',
-  muted: 'rgba(15, 23, 42, 0.70)',
-  accent: '#4f6ef7',
-  accent2: '#22d3ee',
-  accent3: '#a855f7',
-  note: 'rgba(15, 23, 42, 0.46)',
+  muted: '#475569',
+  accent: '#3151c6',
+  accent2: '#0f766e',
+  accent3: '#b45309',
+  note: '#64748b',
 };
 
 const escapeHtml = (value = '') =>
@@ -66,7 +60,8 @@ const shell = ({ label, title, intro, content, note }) => `<!doctype html>
       font-family: Inter, Arial, sans-serif;
       color: ${theme.text};
       padding: 32px 16px;
-      background: ${theme.bg};
+      background-color: ${theme.bg};
+      background-image: radial-gradient(circle at top, rgba(79, 70, 229, 0.08), transparent 32%), radial-gradient(circle at 85% 10%, rgba(20, 184, 166, 0.10), transparent 24%);
     }
     .wrap { max-width: 680px; margin: 0 auto; }
     .topbar {
@@ -85,15 +80,15 @@ const shell = ({ label, title, intro, content, note }) => `<!doctype html>
       width: 44px;
       height: 44px;
       border-radius: 14px;
-      background: #eaf2ff;
-      border: 1px solid rgba(79, 110, 247, 0.12);
+      background: linear-gradient(135deg, #1d4ed8, #14b8a6);
+      border: 1px solid rgba(29, 78, 216, 0.12);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
       font-weight: 900;
-      color: ${theme.accent};
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      color: #ffffff;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
     }
     .brand-name {
       font-size: 18px;
@@ -121,9 +116,9 @@ const shell = ({ label, title, intro, content, note }) => `<!doctype html>
       border: 1px solid ${theme.border};
       border-radius: 30px;
       background: ${theme.panel};
-      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
     }
-    .accent { height: 6px; background: linear-gradient(90deg, rgba(79, 110, 247, 0.95) 0%, rgba(34, 211, 238, 0.75) 55%, rgba(168, 85, 247, 0.85) 100%); }
+    .accent { height: 7px; background: linear-gradient(90deg, #3151c6 0%, #14b8a6 52%, #f59e0b 100%); }
     .body { padding: 34px 30px 30px; }
     .pill {
       display: inline-flex;
@@ -148,7 +143,7 @@ const shell = ({ label, title, intro, content, note }) => `<!doctype html>
     }
     h1 {
       margin: 18px 0 12px;
-      font-size: 34px;
+      font-size: 35px;
       line-height: 1.1;
       letter-spacing: -0.05em;
       color: ${theme.text};
@@ -162,9 +157,35 @@ const shell = ({ label, title, intro, content, note }) => `<!doctype html>
     .content {
       border-radius: 24px;
       border: 1px solid rgba(15, 23, 42, 0.06);
-      background: ${theme.panelSoft};
+      background: linear-gradient(180deg, ${theme.panelSoft} 0%, #ffffff 100%);
       padding: 24px;
     }
+    .stack { display: grid; gap: 12px; }
+    .feature {
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      background: #ffffff;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
+      font-size: 14px;
+      line-height: 1.7;
+      color: ${theme.muted};
+    }
+    .feature strong { color: ${theme.text}; }
+    .cta-wrap { margin-top: 22px; text-align: center; }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+      border-radius: 999px;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 14px 22px;
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+    }
+    .button span { color: #ffffff !important; }
     .footer {
       padding: 18px 8px 0;
       text-align: center;
@@ -189,6 +210,7 @@ const shell = ({ label, title, intro, content, note }) => `<!doctype html>
       .logo { width: 40px; height: 40px; font-size: 16px; }
       .brand-name { font-size: 16px; }
       .content { padding: 18px; border-radius: 16px; }
+      .feature { padding: 14px 15px; }
     }
     /* Tablet: 480px to 768px */
     @media (max-width: 768px) {
@@ -234,6 +256,25 @@ const shell = ({ label, title, intro, content, note }) => `<!doctype html>
 </body>
 </html>`;
 
+const ctaButton = (href, text) => `
+  <div class="cta-wrap">
+    <!--[if mso]>
+    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(
+      href
+    )}" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="50%" stroke="f" fillcolor="#1d4ed8">
+      <w:anchorlock />
+      <center style="color:#ffffff;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;">${escapeHtml(
+        text
+      )}</center>
+    </v:roundrect>
+    <![endif]-->
+    <!--[if !mso]><!-- -->
+    <a class="button" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+      text
+    )}</a>
+    <!--<![endif]-->
+  </div>`;
+
 const codeBadge = (code) => `
   <div style="margin:18px 0 14px;text-align:center;">
     <div style="display:inline-block;padding:16px 22px;border-radius:22px;background:#ffffff;border:1px solid rgba(15,23,42,0.10);box-shadow:0 8px 22px rgba(15,23,42,0.05);">
@@ -252,7 +293,13 @@ const chip = (text, style = 'blue') => {
   return `<div style="padding:14px 16px;border-radius:18px;border:1px solid ${style === 'blue' ? 'rgba(79,110,247,0.18)' : style === 'cyan' ? 'rgba(34,211,238,0.18)' : 'rgba(15,23,42,0.08)'};${styles[style]}font-size:14px;line-height:1.7;">${text}</div>`;
 };
 
-export const sendEmail = async ({ to, subject, text, html, attachments = [] }) => {
+export const sendEmail = async ({
+  to,
+  subject,
+  text,
+  html,
+  attachments = [],
+}) => {
   const transporter = createTransporter();
   if (!transporter) {
     throw new Error(
@@ -293,46 +340,31 @@ export const sendVerificationEmail = async ({ to, name, otp }) => {
 export const sendWelcomeEmail = async ({ to, name }) => {
   const subject = 'Welcome to CareerAI';
   const text = `Hi ${name},\n\nWelcome to CareerAI. Your account has been verified successfully. You can now explore your assessment, roadmap, and career recommendations.\n\nWe’re glad to have you here.`;
-  // Try to render the HTML template file if present (minimal template rendering)
-  try {
-    const tplPath = path.join(
-      __dirname,
-      '..',
-      'templates',
-      'welcome_email.html'
-    );
-    let tpl = await fs.promises.readFile(tplPath, 'utf8');
-
-    // Simple placeholder replacement for text and links
-    tpl = tpl
-      .replace(/{{\s*name\s*}}/g, escapeHtml(name || ''))
-      .replace(/{{\s*cta_link\s*}}/g, escapeHtml(process.env.APP_URL || 'https://career-ai-3btq.onrender.com/'))
-      .replace(/{{\s*support_link\s*}}/g, escapeHtml(process.env.SUPPORT_URL || 'https://careerai.com/support'));
-
-    console.log('Sending welcome email using template:', tplPath);
-
-    return sendEmail({ to, subject, text, html: tpl });
-  } catch (err) {
-    // Fallback to the inline shell renderer if template not found or read fails
-    const html = shell({
-      // label: 'Welcome',
-      title: 'Your account is ready',
-      intro:
-        'You are in. CareerAI is now set up to guide you through assessment, roadmap planning, and personalized recommendations.',
-      content: `
+  const dashboardLink =
+    process.env.APP_URL || 'https://career-ai-3btq.onrender.com/';
+  const supportLink = process.env.SUPPORT_URL || 'https://careerai.com/support';
+  const html = shell({
+    label: 'Welcome to CareerAI',
+    title: 'Your career planning workspace is ready',
+    intro:
+      'Your account is verified. You can now move through assessment, roadmap planning, and personalized recommendations in one streamlined experience.',
+    content: `
       <p style="margin:0;font-size:14px;line-height:1.8;color:${theme.muted};">Hi ${escapeHtml(
         name
       )},</p>
-      <div style="margin-top:18px;display:grid;gap:12px;">
-        ${chip('Start your assessment to generate AI career matches.', 'blue')}
-        ${chip('Build a roadmap and track milestones with streaks and badges.', 'cyan')}
-        ${chip('Use the dashboard to export your progress and revisit recommendations anytime.', 'white')}
+      <div class="stack" style="margin-top:18px;">
+        <div class="feature"><strong>Assessment-first guidance.</strong> Get a clear snapshot of your strengths and the roles that fit your profile.</div>
+        <div class="feature"><strong>Premium roadmap tracking.</strong> Turn your next steps into a structured plan with milestones you can actually follow.</div>
+        <div class="feature"><strong>Always-available support.</strong> Revisit your dashboard anytime and reach out whenever you need help.</div>
       </div>
-      <p style="margin:18px 0 0;font-size:14px;line-height:1.8;color:${theme.muted};">We’re glad to have you here.</p>`,
-    });
+      ${ctaButton(dashboardLink, 'Open your dashboard')}
+      <p style="margin:18px 0 0;font-size:14px;line-height:1.8;color:${theme.muted};">If you ever need help getting started, reply to this email or visit <a href="${escapeHtml(
+        supportLink
+      )}" style="color:${theme.accent};text-decoration:none;font-weight:700;">our support page</a>.</p>`,
+    note: 'We are glad to have you here. Your next best move starts with a focused plan.',
+  });
 
-    return sendEmail({ to, subject, text, html });
-  }
+  return sendEmail({ to, subject, text, html });
 };
 
 export const sendPasswordResetOtpEmail = async ({ to, name, otp }) => {
