@@ -8,12 +8,14 @@
     "dev": "kill-port 5000 && nodemon server.js",
     "start": "node server.js",
     "seed": "node seeder.js",
-    "seed:destroy": "node seeder.js --destroy"
+    "seed:destroy": "node seeder.js --destroy",
+    "test": "cross-env NODE_ENV=test mocha --recursive --exit"
   },
   "dependencies": {
     "@langchain/core": "^0.3.0",
     "@langchain/google-genai": "^0.1.0",
     "bcryptjs": "^2.4.3",
+    "career-ai": "file:..",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.18.2",
@@ -26,7 +28,11 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "chai": "^4.3.8",
+    "cross-env": "^7.0.3",
     "kill-port": "^2.0.1",
-    "nodemon": "^3.0.3"
+    "mocha": "^10.2.0",
+    "nodemon": "^3.0.3",
+    "supertest": "^6.3.3"
   }
 }

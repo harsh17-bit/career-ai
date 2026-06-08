@@ -39,41 +39,41 @@ app.use(
         defaultSrc: ["'self'"],
         scriptSrc: [
           "'self'",
-          "'unsafe-inline'",              // Vite injects inline scripts in the HTML shell
-          "blob:",                         // Vite code-splitting chunks & web workers
-          "https://accounts.google.com",
-          "https://www.googletagmanager.com",
+          "'unsafe-inline'", // Vite injects inline scripts in the HTML shell
+          'blob:', // Vite code-splitting chunks & web workers
+          'https://accounts.google.com',
+          'https://www.googletagmanager.com',
         ],
         scriptSrcElem: [
           "'self'",
           "'unsafe-inline'",
-          "blob:",
-          "https://accounts.google.com",
-          "https://www.googletagmanager.com",
+          'blob:',
+          'https://accounts.google.com',
+          'https://www.googletagmanager.com',
         ],
         styleSrc: [
           "'self'",
           "'unsafe-inline'",
-          "https://fonts.googleapis.com",
-          "https://accounts.google.com",  // Google GSI loads its own stylesheet
+          'https://fonts.googleapis.com',
+          'https://accounts.google.com', // Google GSI loads its own stylesheet
         ],
         styleSrcElem: [
           "'self'",
           "'unsafe-inline'",
-          "https://fonts.googleapis.com",
-          "https://accounts.google.com",  // accounts.google.com/gsi/style
+          'https://fonts.googleapis.com',
+          'https://accounts.google.com', // accounts.google.com/gsi/style
         ],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "blob:", "https:"],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
         connectSrc: [
           "'self'",
-          "https://accounts.google.com",
-          "https://www.google-analytics.com",   // Google Analytics
-          "https://analytics.google.com",
-          "https://www.googletagmanager.com",
+          'https://accounts.google.com',
+          'https://www.google-analytics.com', // Google Analytics
+          'https://analytics.google.com',
+          'https://www.googletagmanager.com',
         ],
-        frameSrc: ["https://accounts.google.com"],
-        workerSrc: ["'self'", "blob:"],
+        frameSrc: ['https://accounts.google.com'],
+        workerSrc: ["'self'", 'blob:'],
       },
     },
   })
@@ -134,19 +134,23 @@ if (process.env.NODE_ENV === 'production') {
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  sendWeeklyCheckIns().catch((error) => {
-    console.error('Weekly reminder sweep failed:', error.message);
-  });
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    sendWeeklyCheckIns().catch((error) => {
+      console.error('Weekly reminder sweep failed:', error.message);
+    });
 
-  setInterval(
-    () => {
-      sendWeeklyCheckIns().catch((error) => {
-        console.error('Weekly reminder sweep failed:', error.message);
-      });
-    },
-    24 * 60 * 60 * 1000
-  );
-});
+    setInterval(
+      () => {
+        sendWeeklyCheckIns().catch((error) => {
+          console.error('Weekly reminder sweep failed:', error.message);
+        });
+      },
+      24 * 60 * 60 * 1000
+    );
+  });
+}
+
+export default app;
