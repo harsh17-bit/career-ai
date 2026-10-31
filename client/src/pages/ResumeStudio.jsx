@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { FileText, Sparkles, Upload, CheckCircle2, AlertCircle } from 'lucide-react';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import { toast } from 'react-hot-toast';
 import Button from '../components/ui/Button';
 import { resumeAPI } from '../services/api';
 import '../styles/features/resume.css';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 const starterContent = `Alex Morgan
 alex.morgan@email.com | linkedin.com/in/alexmorgan
@@ -31,6 +35,7 @@ export default function ResumeStudio() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   const loadResumes = async () => {
     try {
@@ -47,15 +52,66 @@ export default function ResumeStudio() {
     loadResumes();
   }, []);
 
+  const extractPdfText = async (file) => {
+    const pdf = await pdfjsLib.getDocument({
+      data: await file.arrayBuffer(),
+    }).promise;
+    const pages = [];
+
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item) => ('str' in item ? item.str : ''))
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (pageText) pages.push(`Page ${pageNumber}\n${pageText}`);
+    }
+
+    const extractedText = pages.join('\n\n').trim();
+    if (!extractedText) {
+      throw new Error(
+        'This PDF does not contain selectable text. Please use an OCR-enabled PDF or paste the text manually.'
+      );
+    }
+
+    return extractedText;
+  };
+
   const handleFile = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (file.type !== 'text/plain' && !file.name.endsWith('.txt')) {
-      toast.error('For now, upload a plain text resume export.');
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    const isText = file.type === 'text/plain' || file.name.toLowerCase().endsWith('.txt');
+    if (!isPdf && !isText) {
+      toast.error('Choose a PDF or plain-text resume file.');
       return;
     }
-    setContent(await file.text());
-    setTitle(file.name.replace(/\.[^/.]+$/, '') || title);
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Please choose a file smaller than 10 MB.');
+      return;
+    }
+
+    setImporting(true);
+    try {
+      const importedText = isPdf
+        ? await extractPdfText(file)
+        : await file.text();
+      if (importedText.trim().length < 40) {
+        throw new Error('The imported file does not contain enough readable resume text.');
+      }
+      setContent(importedText);
+      setTitle(file.name.replace(/\.[^/.]+$/, '') || title);
+      toast.success(isPdf ? 'PDF text imported successfully.' : 'Text resume imported successfully.');
+    } catch (error) {
+      toast.error(error.message || 'Could not read that file.');
+    } finally {
+      setImporting(false);
+      event.target.value = '';
+    }
   };
 
   const handleSave = async (event) => {
@@ -116,10 +172,15 @@ export default function ResumeStudio() {
           <h1>Make your experience impossible to miss.</h1>
           <p>Draft an ATS-friendly resume, then use CareerAI to find the signal recruiters should see first.</p>
         </div>
-        <label className="resume-upload-button">
+        <label className={`resume-upload-button ${importing ? 'is-loading' : ''}`}>
           <Upload />
-          Import .txt
-          <input type="file" accept=".txt,text/plain" onChange={handleFile} />
+          {importing ? 'Reading file…' : 'Import PDF or TXT'}
+          <input
+            type="file"
+            accept=".pdf,application/pdf,.txt,text/plain"
+            onChange={handleFile}
+            disabled={importing}
+          />
         </label>
       </header>
 
