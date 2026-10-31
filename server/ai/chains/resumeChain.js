@@ -10,7 +10,11 @@ const analyzeResume = async (resumeText) => {
     prompt: formattedPrompt,
     temperature: 0.25,
   });
-  const jsonMatch = response.content.match(/\{[\s\S]*\}/);
+  const content =
+    typeof response.content === 'string'
+      ? response.content
+      : JSON.stringify(response.content);
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('Failed to parse AI resume analysis');
   return resumeAnalysisSchema.parse(JSON.parse(jsonMatch[0]));
 };
