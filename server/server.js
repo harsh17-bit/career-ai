@@ -10,6 +10,7 @@ import authRoutes from './routes/authRoutes.js';
 import careerRoutes from './routes/careerRoutes.js';
 import roadmapRoutes from './routes/roadmapRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
+import resumeRoutes from './routes/resumeRoutes.js';
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
 import { sendWeeklyCheckIns } from './utils/reminders.js';
 
@@ -118,6 +119,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/career', careerRoutes);
 app.use('/api/roadmap', roadmapRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/resumes', resumeRoutes);
 
 // Serve email template images statically
 app.use('/images', express.static(path.join(__dirname, 'templates', 'images')));

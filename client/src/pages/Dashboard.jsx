@@ -14,11 +14,12 @@ import {
   FiRotateCcw,
   FiUser,
   FiMap,
+  FiPlayCircle,
 } from 'react-icons/fi';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import useAuthStore from '../store/authStore';
-import { authAPI } from '../services/api';
+import { authAPI, roadmapAPI } from '../services/api';
 import '../styles/features/dashboard.css';
 import AssessmentSummary from '../components/sections/AssessmentSummary';
 
@@ -32,6 +33,7 @@ const difficultyColors = {
 export default function Dashboard() {
   const { user, updateUser } = useAuthStore();
   const [recommendations, setRecommendations] = useState([]);
+  const [activeRoadmap, setActiveRoadmap] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -50,6 +52,19 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchRoadmap = async () => {
+      try {
+        const res = await roadmapAPI.getUserRoadmaps();
+        setActiveRoadmap(res.data[0] || null);
+      } catch (err) {
+        console.error('Failed to fetch roadmap progress');
+      }
+    };
+
+    fetchRoadmap();
+  }, []);
 
   if (loading) {
     return (
@@ -89,6 +104,11 @@ export default function Dashboard() {
     topCareer?.requiredSkills?.filter((s) => !userSkills.includes(s)) || [];
   const matchedSkills =
     topCareer?.requiredSkills?.filter((s) => userSkills.includes(s)) || [];
+  const nextPhase = activeRoadmap?.phases?.find((phase) => !phase.completed);
+  const completedPhases =
+    activeRoadmap?.phases?.filter((phase) => phase.completed).length || 0;
+  const totalPhases = activeRoadmap?.phases?.length || 0;
+  const roadmapProgress = activeRoadmap?.overallProgress || 0;
 
   const profile = user?.profile || {};
   const completionChecks = [
@@ -209,6 +229,79 @@ export default function Dashboard() {
 
         {/* Assessment Summary */}
         <AssessmentSummary />
+
+        <section className="dashboard-momentum" aria-label="Learning momentum">
+          <div className="momentum-copy">
+            <div className="skill-gap-badge">
+              <FiPlayCircle />
+              <span>Learning momentum</span>
+            </div>
+            {activeRoadmap ? (
+              <>
+                <h2>{activeRoadmap.career}</h2>
+                <p>
+                  {nextPhase
+                    ? `Your next milestone is ${nextPhase.title}. Keep the streak moving.`
+                    : 'You have completed every milestone in this roadmap.'}
+                </p>
+              </>
+            ) : (
+              <>
+                <h2>Turn a career match into a plan</h2>
+                <p>
+                  Generate a roadmap to turn your strongest career match into
+                  clear, manageable milestones.
+                </p>
+              </>
+            )}
+          </div>
+          {activeRoadmap ? (
+            <div className="momentum-progress">
+              <div className="momentum-progress-heading">
+                <span>Roadmap progress</span>
+                <strong>{roadmapProgress}%</strong>
+              </div>
+              <div
+                className="momentum-progress-track"
+                role="progressbar"
+                aria-label={`${roadmapProgress}% roadmap progress`}
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow={roadmapProgress}
+              >
+                <span style={{ width: `${roadmapProgress}%` }} />
+              </div>
+              <p>
+                {completedPhases} of {totalPhases} milestones complete
+              </p>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() =>
+                  navigate(
+                    `/roadmap?career=${encodeURIComponent(activeRoadmap.career)}`
+                  )
+                }
+              >
+                Continue roadmap
+                <FiArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() =>
+                navigate(
+                  `/roadmap?career=${encodeURIComponent(topCareer?.name || '')}`
+                )
+              }
+            >
+              Build my roadmap
+              <FiArrowRight className="w-4 h-4" />
+            </Button>
+          )}
+        </section>
 
         {/* Skill Gap */}
         <div className="dashboard-skill-gap">

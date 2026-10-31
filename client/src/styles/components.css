@@ -42,7 +42,7 @@
   }
 
   .gradient-bg {
-    background: linear-gradient(135deg, #1978a5 0%, #1fbfb8 58%, #05716c 100%);
+    background: linear-gradient(135deg, #0f7495 0%, #168f9f 50%, #6366f1 100%);
   }
 
   .gradient-bg-subtle {
@@ -82,12 +82,13 @@
 
   .btn-primary {
     @apply btn-apple text-white shadow-lg;
-    background: linear-gradient(135deg, #1978a5 0%, #1fbfb8 100%);
-    box-shadow: 0 8px 32px rgba(25, 120, 165, 0.35);
+    background: linear-gradient(135deg, #22d3ee 0%, #6366f1 100%);
+    color: #07111f;
+    box-shadow: 0 10px 32px rgba(34, 211, 238, 0.2);
   }
 
   .btn-primary:hover {
-    box-shadow: 0 12px 40px rgba(25, 120, 165, 0.46);
+    box-shadow: 0 14px 42px rgba(34, 211, 238, 0.3);
   }
 
   .btn-secondary {
@@ -109,6 +110,23 @@
     background: var(--surface-card-hover);
     border-color: color-mix(in srgb, var(--border-soft) 120%, transparent);
     transform: scale(1.02);
+  }
+
+  .landing-page .card-apple {
+    border-color: rgba(148, 163, 184, 0.13);
+    background:
+      linear-gradient(145deg, rgba(20, 38, 62, 0.64), rgba(8, 17, 30, 0.58)),
+      var(--surface-card);
+    box-shadow:
+      0 16px 40px rgba(2, 8, 23, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  }
+
+  .landing-page .card-apple:hover {
+    border-color: rgba(103, 232, 249, 0.28);
+    box-shadow:
+      0 22px 52px rgba(2, 8, 23, 0.2),
+      0 0 0 1px rgba(103, 232, 249, 0.05);
   }
 
   .input-apple {

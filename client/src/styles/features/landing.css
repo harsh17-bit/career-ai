@@ -8,3 +8,41 @@
 .landing-page > * + * {
   margin-top: var(--landing-section-gap);
 }
+
+.landing-page section:not(.hero-section) {
+  position: relative;
+}
+
+.landing-page section:not(.hero-section)::before {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(72rem, 84vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.12), transparent);
+  transform: translateX(-50%);
+  content: '';
+}
+
+.landing-cta {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.landing-cta .container-apple > div {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow:
+    0 30px 80px rgba(2, 8, 23, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.landing-cta .container-apple > div > div:first-child {
+  opacity: 0.82;
+}
+
+@media (max-width: 640px) {
+  .landing-cta {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}

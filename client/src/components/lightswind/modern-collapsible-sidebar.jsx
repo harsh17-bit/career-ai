@@ -8,6 +8,7 @@ import {
   Map,
   Search,
   Settings,
+  FileText,
   X,
 } from 'lucide-react';
 import { FiSun, FiMoon } from 'react-icons/fi';
@@ -28,6 +29,7 @@ const ModernCollapsibleSidebar = ({ children }) => {
   const menuItems = [
     { icon: Layout, label: 'Dashboard', href: '/dashboard' },
     { icon: Map, label: 'Roadmap', href: '/roadmap' },
+    { icon: FileText, label: 'Resume Studio', href: '/resume-studio' },
     { icon: Settings, label: 'Profile', href: '/profile' },
   ];
 

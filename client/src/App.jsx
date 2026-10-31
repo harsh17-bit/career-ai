@@ -19,13 +19,14 @@ import Dashboard from './pages/Dashboard';
 import Roadmap from './pages/Roadmap';
 import Profile from './pages/Profile';
 import EmailPreview from './pages/EmailPreview';
+import ResumeStudio from './pages/ResumeStudio';
 import useAuthStore from './store/authStore';
 import { useTheme } from './context/ThemeContext';
 import ModernCollapsibleSidebar from './components/lightswind/modern-collapsible-sidebar';
 import FloatingDock from './components/lightswind/floating-dock';
 import Antigravity from './components/ui/Antigravity';
 
-const SIDEBAR_ROUTES = ['/dashboard', '/roadmap', '/profile'];
+const SIDEBAR_ROUTES = ['/dashboard', '/roadmap', '/profile', '/resume-studio'];
 const AUTH_ROUTES = ['/login', '/signup', '/verify-email', '/forgot-password'];
 
 function isPublicAuthRoute(pathname) {
@@ -254,6 +255,14 @@ function AppShell() {
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/resume-studio"
+        element={
+          <ProtectedRoute>
+            <ResumeStudio />
           </ProtectedRoute>
         }
       />

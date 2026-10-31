@@ -35,3 +35,11 @@ export const roadmapSchema = z.object({
     })
   ),
 });
+
+export const resumeAnalysisSchema = z.object({
+  score: z.number().int().min(0).max(100),
+  summary: z.string().min(1),
+  strengths: z.array(z.string()).min(1).max(8),
+  missingKeywords: z.array(z.string()).min(1).max(8),
+  suggestions: z.array(z.string()).min(1).max(8),
+});

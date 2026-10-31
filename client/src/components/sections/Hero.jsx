@@ -6,6 +6,8 @@ import {
   FiHeadphones,
   FiTarget,
   FiArrowUp,
+  FiStar,
+  FiCheck,
 } from 'react-icons/fi';
 import Button from '../ui/Button';
 import '../../styles/features/hero.css';
@@ -58,29 +60,28 @@ export default function Hero() {
 
       <div className="container-apple hero-container">
         <div className="hero-inner">
-          {/* Badge */}
-          {/* <motion.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10 mb-8"
+            className="hero-badge"
           >
-            <FiStar className="w-4 h-4 text-apple-blue" />
-            <span className="text-sm font-medium text-white/70">
-              AI-Powered Career Guidance
+            <span className="hero-badge-icon">
+              <FiStar />
             </span>
-          </motion.div> */}
+            <span className="hero-badge-text">Your next chapter, clarified by AI</span>
+            <span className="hero-badge-arrow"><FiArrowRight /></span>
+          </motion.div>
 
-          {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="hero-title"
           >
-            Step to Perfect
+            Build a career
             <br />
-            <span className="gradient-text">Future Path</span>
+            <span className="gradient-text">with direction.</span>
           </motion.h1>
 
           {/* Subtext */}
@@ -90,9 +91,9 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="hero-subtext"
           >
-            Powered by advanced AI, CareerAI analyzes your skills, interests,
-            and goals to recommend personalized career paths with detailed
-            learning roadmaps.
+            CareerAI turns your strengths, interests, and goals into a clear
+            plan you can actually act on—from your first assessment to your
+            first offer.
           </motion.p>
 
           {/* CTAs */}
@@ -114,6 +115,16 @@ export default function Hero() {
                 See How It Works
               </Button>
             </a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.45 }}
+            className="hero-proof-row"
+          >
+            <span><FiCheck /> Personalised, not generic</span>
+            <span><FiCheck /> Built for momentum</span>
           </motion.div>
 
           {/* Floating Preview Cards */}

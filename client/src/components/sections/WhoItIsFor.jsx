@@ -25,7 +25,7 @@ export default function WhoItIsFor() {
             Built for people who need clarity.
           </h2>
           <p className="mt-4 text-sm sm:text-base text-white/45 max-w-2xl mx-auto leading-relaxed">
-            Whether you are starting fresh or changing direction, CareerAI n+
+            Whether you are starting fresh or changing direction, CareerAI
             helps you narrow the options and move with confidence.
           </p>
         </div>

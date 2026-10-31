@@ -242,6 +242,75 @@
   color: var(--dashboard-text-muted);
 }
 
+.dashboard-momentum {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+  gap: 1.5rem;
+  align-items: center;
+  background: linear-gradient(
+    120deg,
+    rgba(14, 165, 233, 0.14),
+    var(--dashboard-card-bg) 55%
+  );
+  border: 1px solid var(--dashboard-card-border);
+  border-radius: 0.9rem;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(18px);
+}
+
+.momentum-copy h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--dashboard-text-primary);
+  margin-bottom: 0.45rem;
+}
+
+.momentum-copy p,
+.momentum-progress > p {
+  color: var(--dashboard-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.momentum-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.momentum-progress-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--dashboard-text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.momentum-progress-heading strong {
+  color: var(--dashboard-accent);
+}
+
+.momentum-progress-track {
+  height: 0.55rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--surface-soft);
+}
+
+.momentum-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--dashboard-accent), #22d3ee);
+  transition: width 0.4s ease;
+}
+
+.momentum-progress .btn {
+  align-self: flex-start;
+}
+
 .dashboard-skill-gap {
   background: var(--dashboard-card-bg);
   border: 1px solid var(--dashboard-card-border);
@@ -529,6 +598,10 @@
 }
 
 @media (max-width: 768px) {
+  .dashboard-momentum {
+    grid-template-columns: 1fr;
+  }
+
   .dashboard-page {
     padding: 4.5rem 0.75rem 2.5rem;
   }

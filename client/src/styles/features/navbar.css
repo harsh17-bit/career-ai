@@ -338,3 +338,46 @@ html.theme-light .site-header-mobile-toggle {
     padding: 8px;
   }
 }
+
+/* 2026 landing refresh */
+.site-header {
+  padding: 14px 0;
+}
+
+.site-header-shell {
+  min-height: 68px;
+  border-color: rgba(148, 163, 184, 0.16);
+  border-radius: 20px;
+  padding: 0 14px 0 18px;
+  background: rgba(10, 20, 35, 0.72);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 14px 40px rgba(2, 8, 23, 0.22);
+}
+
+.site-header-name {
+  font-size: 22px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.site-header-link {
+  text-transform: none;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+.site-header-deploy {
+  height: 40px;
+  border-radius: 12px;
+  border-color: rgba(103, 232, 249, 0.28);
+  background: linear-gradient(135deg, #67e8f9, #818cf8);
+  color: #07111f;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  padding: 0 15px;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.site-header-deploy:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(103, 232, 249, 0.18);
+}

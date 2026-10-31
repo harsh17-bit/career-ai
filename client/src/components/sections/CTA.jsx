@@ -9,7 +9,7 @@ export default function CTA() {
   const firstName =
     user?.firstName || (user?.name && user.name.split(' ')[0]) || null;
   return (
-    <section className="section-padding relative overflow-hidden">
+    <section className="section-padding landing-cta relative overflow-hidden">
       <div className="container-apple relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

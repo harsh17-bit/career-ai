@@ -64,4 +64,11 @@ export const chatAPI = {
   getHistory: () => api.get('/chat/history'),
 };
 
+export const resumeAPI = {
+  list: () => api.get('/resumes'),
+  get: (id) => api.get(`/resumes/${id}`),
+  create: (data) => api.post('/resumes', data),
+  analyze: (id) => api.post(`/resumes/${id}/analyze`),
+};
+
 export default api;
